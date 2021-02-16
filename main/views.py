@@ -2,6 +2,7 @@
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.middleware.csrf import get_token
 from django.http import Http404
+from uuid import UUID
 
 from rest_framework import permissions, status
 from rest_framework.decorators import api_view
@@ -71,7 +72,7 @@ class UserEmailDetails(APIView):
         inv.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-class UserCliques(APIView):
+class UserTeams(APIView):
     permission_classes = (permissions.AllowAny,)
 
     def get_object_byid(self, id):
@@ -81,19 +82,29 @@ class UserCliques(APIView):
             return False
 
     def get(self, request, username, format=None):
-        userQuerySet = User.objects.values('cliques', 'username')
-        cliqueids=[]
+        userQuerySet = User.objects.values('username', 'id')
+        teamQuerySet = Clique.objects.values('members', 'managers', 'owners', 'id')
+        print(teamQuerySet)
+        teams = []
+        userId = ''
         for user in userQuerySet:
-            if user['username']==username:
-                cliqueids.append(user['cliques'])
-        if cliqueids:
-            members=[]
-            for cliqueid in cliqueids:
-                members.append(CliqueSerializer(self.get_object_byid(cliqueid)).data)
-            return Response(members, status=status.HTTP_200_OK)
+            if user['username'] == username:
+                userId = user['id']
 
-        else:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+        if userId:
+            for team in teamQuerySet:
+                members = team['members']
+                managers = team['managers']
+                owners = team['owners']
+                if userId == members or userId == managers or userId == owners:
+                    teamObject = self.get_object_byid(team['id'])
+                    serializedTeam = CliqueSerializer(teamObject).data
+                    if not serializedTeam in teams:
+                        teams.append(serializedTeam)
+                
+            return Response(teams, status=status.HTTP_200_OK)
+
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
 class CliqueDetails(APIView):
     permission_classes = (permissions.AllowAny,)

@@ -5,7 +5,7 @@ from .models import Event, Request, ToDo, Invitation, User, Clique, Schedule, Ti
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'username', 'first_name', 'last_name', 'bio', 'email', 'phone', 'picture', 'theme', 'cliques') 
+        fields = '__all__'
 
 class CliqueSerializer(serializers.ModelSerializer):
     class Meta:
