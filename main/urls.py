@@ -8,6 +8,7 @@ urlpatterns = [
     path('addUsers/', UserList.as_view()),
     path('users/<str:username>/', UserDetails.as_view()),
     path('users/<str:username>/teams/',UserTeams.as_view()),
+    path('users/<str:username>/contacts/',UserContacts.as_view()),
     path('userEmailDetails/<str:userEmail>/', UserEmailDetails.as_view()),
     path('cliqueDetails/<str:name>/', CliqueDetails.as_view()),
     path('cliqueMembers/<str:name>/', CliqueMembers.as_view()),    

@@ -84,7 +84,6 @@ class UserTeams(APIView):
     def get(self, request, username, format=None):
         userQuerySet = User.objects.values('username', 'id')
         teamQuerySet = Clique.objects.values('members', 'managers', 'owners', 'id')
-        print(teamQuerySet)
         teams = []
         userId = ''
         for user in userQuerySet:
@@ -104,6 +103,59 @@ class UserTeams(APIView):
                 
             return Response(teams, status=status.HTTP_200_OK)
 
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+class UserContacts(APIView):
+    permission_classes = (permissions.AllowAny,)
+
+    def get_object_byid(self, id):
+        try:
+            return Clique.objects.get(id=id)
+        except Clique.DoesNotExist:
+            return False
+
+    def get_user_object_byid(self, id):
+        try:
+            return User.objects.get(id=id)
+        except User.DoesNotExist:
+            return False
+
+    def get(self, request, username, format=None):
+        userQuerySet = User.objects.values('username', 'id')
+        teamQuerySet = Clique.objects.values('members', 'managers', 'owners', 'id')
+        seen = set()
+        teams = set()
+        contacts = []
+        userId = ''
+        for user in userQuerySet:
+            if user['username'] == username:
+                userId = user['id']
+
+        if userId:
+            for team in teamQuerySet:
+                members = team['members']
+                managers = team['managers']
+                owners = team['owners']
+                if userId == members or userId == managers or userId == owners:
+                    teams.add(team['id'])
+
+            newTeamQuerySet = Clique.objects.values('members', 'managers', 'owners', 'id')
+            
+            for team in newTeamQuerySet:
+                if team['id'] in teams:
+                    members = team['members']
+                    managers = team['managers']
+                    owners = team['owners']
+                    for user in [members, managers, owners]:
+                        if user != userId:
+                            contact = self.get_user_object_byid(user)
+                            if contact:
+                                if not user in seen:
+                                    serializedContact = UserSerializer(contact).data
+                                    contacts.append(serializedContact)
+                                    seen.add(user)
+                
+            return Response(list(contacts), status=status.HTTP_200_OK)
         return Response(status=status.HTTP_404_NOT_FOUND)
 
 class CliqueDetails(APIView):
