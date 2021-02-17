@@ -1,7 +1,7 @@
 ## Home to the opus-tm Django REST [API](https://opustm-api.herokuapp.com/)
 ## This API serves our React Web [App](https://opustm.herokuapp.com/)
 
-### Test Users: (password and username are the same, email is &lt;username&gt;@example.com)
+### Test Users: (password and username are the same, email is {username}@example.com)
 For the time-being, please do not register any more users unless testing email invitation/registration - Management
 - test
 
@@ -9,54 +9,54 @@ For the time-being, please do not register any more users unless testing email i
 ## User
 - /currentUser/                  
 - /users/                         
-- /users/&lt;username&gt;/
-- /users/&lt;username&gt;/teams/
-- /users/&lt;username&gt;/contacts/
-- /users/&lt;username&gt;/schedule/
-- /userEmailDetails/&lt;userEmail&gt;/
+- /users/{username}/
+- /users/{username}/teams/
+- /users/{username}/contacts/
+- /users/{username}/schedule/
+- /userEmailDetails/{userEmail}/
 ## Clique
 - /cliques/
-- /cliques/&lt;cliqueId&gt;/
-- /cliqueDetails/&lt;cliqueName&gt;/
-- /cliqueMembers/&lt;cliqueName&gt;/
+- /cliques/{cliqueId}/
+- /cliqueDetails/{cliqueName}/
+- /cliqueMembers/{cliqueName}/
 ## Invitation
 - /invitations/
-- /invitation/&lt;invitationId&gt;/
-- /invitationDetails/&lt;inviteeEmail&gt;/
-- /userInvitations/&lt;username&gt;/
+- /invitation/{invitationId}/
+- /invitationDetails/{inviteeEmail}/
+- /userInvitations/{username}/
 ## Request
 - /requests/
-- /requests/&lt;requestId&gt;/
-- /cliqueRequests/&lt;cliqueName&gt;/
+- /requests/{requestId}/
+- /cliqueRequests/{cliqueName}/
 ## Event
 - /events/
-- /events/&lt;cliqueEventId&gt;/
-- /cliqueEvents/&lt;cliqueName&gt;/
+- /events/{cliqueEventId}/
+- /cliqueEvents/{cliqueName}/
 ## Schedule
 - /schedules/
-- /schedules/&lt;scheduleId&gt;/
-- /userSchedules/&lt;username&gt;/
+- /schedules/{scheduleId}/
+- /userSchedules/{username}/
 - /timeframes/
-- /timeframes/&lt;timeFrameId&gt;/
-- /scheduleTimeFrames/&lt;scheduleId&gt;/
+- /timeframes/{timeFrameId}/
+- /scheduleTimeFrames/{scheduleId}/
 ## Announcement
 - /announcements/
-- /announcements/&lt;announcementId&gt;/
-- /cliqueAnnouncements/&lt;cliqueName&gt;/
+- /announcements/{announcementId}/
+- /cliqueAnnouncements/{cliqueName}/
 ## Message
 - /directMessages/
-- /directMessages/&lt;directMessageId&gt;/
-- /userDirectMessagesSent/&lt;username&gt;/
-- /userDirectMessagesRecieved/&lt;username&gt;/
+- /directMessages/{directMessageId}/
+- /userDirectMessagesSent/{username}/
+- /userDirectMessagesRecieved/{username}/
 - /cliqueMessages/
-- /cliqueMessages/&lt;cliqueMessageId&gt;/
-- /cliqueCliqueMessages/&lt;cliqueName&gt;/
+- /cliqueMessages/{cliqueMessageId}/
+- /cliqueCliqueMessages/{cliqueName}/
 - /reactions/
-- /reactions/&lt;reactionId&gt;/
+- /reactions/{reactionId}/
 ## To Do
 - /toDos/
-- /toDos/&lt;toDoId&gt;/
-- /userToDos/&lt;username&gt;/
+- /toDos/{toDoId}/
+- /userToDos/{username}/
 ## Token
 - /tokenAuth/
 ## Django Admin
