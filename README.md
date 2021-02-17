@@ -4,21 +4,15 @@
 ### Test Users: (password and username are the same, email is &lt;username&gt;@example.com)
 For the time-being, please do not register any more users unless testing email invitation/registration - Management
 - test
-- dvader
-- lukeskywalker
-- leiaskywalker
-
-### Test Cliques:
-- Test
-- The Dark Side
 
 # Endpoints:
 ## User
-- /currentUser/
-- /addUsers/                  
+- /currentUser/                  
 - /users/                         
-- /users/&lt;userId&gt;/
-- /userDetails/&lt;username&gt;/
+- /users/&lt;username&gt;/
+- /users/&lt;username&gt;/teams/
+- /users/&lt;username&gt;/contacts/
+- /users/&lt;username&gt;/schedule/
 - /userEmailDetails/&lt;userEmail&gt;/
 ## Clique
 - /cliques/

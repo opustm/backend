@@ -15,10 +15,11 @@ def documentation(request):
             <h3>User</h3>
             <ul>
                 <li><a href="/currentUser/">/currentUser/</a></li>
-                <li><a href="/addUsers/">/addUsers/</a></li>
                 <li><a href="/users/">/users/</a></li>
-                <li><a href="/users/4/">/users/&lt;userId&gt;/</a></li>
-                <li><a href="/userDetails/barackO/">/userDetails/&lt;username&gt;/</a></li>
+                <li><a href="/users/test1/">/users/&lt;username&gt;/</a></li>
+                <li><a href="/users/test1/teams/">/users/&lt;username&gt;/teams/</a></li>
+                <li><a href="/users/test1/contacts/">/users/&lt;username&gt;/contacts/</a></li>
+                <li><a href="/users/test1/schedule/">/users/&lt;username&gt;/schedule/</a></li>
                 <li><a href="/userEmailDetails/barackO@example.com/">/userEmailDetails/&lt;userEmail&gt;/</a></li>
             </ul>
             <h3>Clique</h3>

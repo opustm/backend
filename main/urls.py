@@ -1,11 +1,9 @@
 from django.urls import path, include
 from .views import *
-# current_user, UserList, CliqueRequests, UserEmailDetails, CliqueIdMembers, InvitationDetails, UserToDos, index, UserDetails, CliqueDetails, CliqueEvents, UserEvents, UserInvitations, CliqueMembers, UserSchedules, ScheduleTimeFrames, CliqueAnnouncements, CliqueCliqueMessages, UserDirectMessagesSent, UserDirectMessagesRecieved, UserCliques, RelatedCliques, ManyRelatedCliques
 
 urlpatterns = [
     path('', index),
     path('currentUser/', current_user),
-    path('addUsers/', UserList.as_view()),
     path('users/<str:username>/', UserDetails.as_view()),
     path('users/<str:username>/teams/',UserTeams.as_view()),
     path('users/<str:username>/contacts/',UserContacts.as_view()),
