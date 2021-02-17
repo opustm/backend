@@ -71,7 +71,7 @@ class UserEmailDetails(APIView):
         inv.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-class UserCliques(APIView):
+class UserTeams(APIView):
     permission_classes = (permissions.AllowAny,)
 
     def get_object_byid(self, id):
@@ -81,19 +81,104 @@ class UserCliques(APIView):
             return False
 
     def get(self, request, username, format=None):
-        userQuerySet = User.objects.values('cliques', 'username')
-        cliqueids=[]
+        userQuerySet = User.objects.values('username', 'id')
+        teamQuerySet = Clique.objects.values('members', 'managers', 'owners', 'id')
+        teams = []
+        userId = ''
         for user in userQuerySet:
-            if user['username']==username:
-                cliqueids.append(user['cliques'])
-        if cliqueids:
-            members=[]
-            for cliqueid in cliqueids:
-                members.append(CliqueSerializer(self.get_object_byid(cliqueid)).data)
-            return Response(members, status=status.HTTP_200_OK)
+            if user['username'] == username:
+                userId = user['id']
 
-        else:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+        if userId:
+            for team in teamQuerySet:
+                members = team['members']
+                managers = team['managers']
+                owners = team['owners']
+                if userId == members or userId == managers or userId == owners:
+                    teamObject = self.get_object_byid(team['id'])
+                    serializedTeam = CliqueSerializer(teamObject).data
+                    if not serializedTeam in teams:
+                        teams.append(serializedTeam)
+                
+            return Response(teams, status=status.HTTP_200_OK)
+
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+class UserContacts(APIView):
+    permission_classes = (permissions.AllowAny,)
+
+    def get_object_byid(self, id):
+        try:
+            return Clique.objects.get(id=id)
+        except Clique.DoesNotExist:
+            return False
+
+    def get_user_object_byid(self, id):
+        try:
+            return User.objects.get(id=id)
+        except User.DoesNotExist:
+            return False
+
+    def get(self, request, username, format=None):
+        userQuerySet = User.objects.values('username', 'id')
+        teamQuerySet = Clique.objects.values('members', 'managers', 'owners', 'id')
+        seen = set()
+        teams = set()
+        contacts = []
+        userId = ''
+        for user in userQuerySet:
+            if user['username'] == username:
+                userId = user['id']
+
+        if userId:
+            for team in teamQuerySet:
+                members = team['members']
+                managers = team['managers']
+                owners = team['owners']
+                if userId == members or userId == managers or userId == owners:
+                    teams.add(team['id'])
+
+            newTeamQuerySet = Clique.objects.values('members', 'managers', 'owners', 'id')
+            
+            for team in newTeamQuerySet:
+                if team['id'] in teams:
+                    members = team['members']
+                    managers = team['managers']
+                    owners = team['owners']
+                    for user in [members, managers, owners]:
+                        if user != userId:
+                            contact = self.get_user_object_byid(user)
+                            if contact:
+                                if not user in seen:
+                                    serializedContact = UserSerializer(contact).data
+                                    contacts.append(serializedContact)
+                                    seen.add(user)
+                
+            return Response(list(contacts), status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+class UserSchedule(APIView):
+    def getScheduleObject(self, id):
+        try:
+            return Schedule.objects.get(user = id)
+        except User.DoesNotExist:
+            return False
+
+    def get(self, request, username):
+        userQuerySet = User.objects.values('username', 'id')
+        scheduleQuerySet = Schedule.objects.values('user')
+
+        userId = ''
+        for user in userQuerySet:
+            if user['username'] == username:
+                userId = user['id']
+        if userId:
+            for schedule in scheduleQuerySet:
+                if schedule['user'] == userId:
+                    scheduleObject = self.getScheduleObject(userId)
+                    serializedSchedule = ScheduleSerializer(scheduleObject).data
+                    return Response(serializedSchedule, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
 class CliqueDetails(APIView):
     permission_classes = (permissions.AllowAny,)
@@ -553,18 +638,3 @@ def current_user(request):
     
     serializer = UserSerializer(request.user)
     return Response(serializer.data)
-
-class UserList(APIView):
-    """
-    Create a new user. It's called 'UserList' because normally we'd have a get
-    method here too, for retrieving a list of all User objects.
-    """
-
-    permission_classes = (permissions.AllowAny,)
-
-    def post(self, request, format=None):
-        serializer = UserSerializerWithToken(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

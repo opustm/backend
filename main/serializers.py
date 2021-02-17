@@ -5,7 +5,7 @@ from .models import Event, Request, ToDo, Invitation, User, Clique, Schedule, Ti
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'username', 'first_name', 'last_name', 'bio', 'email', 'phone', 'picture', 'theme', 'cliques') 
+        fields = ('username', 'first_name', 'last_name', 'email', 'bio', 'picture', 'theme', 'phone')
 
 class CliqueSerializer(serializers.ModelSerializer):
     class Meta:
@@ -30,7 +30,6 @@ class EventSerializer(serializers.ModelSerializer):
 class ScheduleSerializer(serializers.ModelSerializer):
     timeframes = serializers.SerializerMethodField()
     user = serializers.SerializerMethodField()
-    cliques = serializers.SerializerMethodField()
 
     class Meta:
         model = Schedule
@@ -42,10 +41,6 @@ class ScheduleSerializer(serializers.ModelSerializer):
 
     def get_user(self, obj):
         data = UserSerializer(obj.user).data
-        return data
-
-    def get_cliques(self, obj):
-        data = CliqueSerializer(obj.cliques.all(), many=True).data
         return data
 
 class TimeFrameSerializer(serializers.ModelSerializer):

@@ -41,28 +41,31 @@ class AbstractGroup(models.Model):
     def natural_key(self):
         return (self.name,)
 
-class Clique(AbstractGroup):
-    workspace = models.CharField(max_length=100, default="general")
-    cliqueType = models.CharField(max_length=100, choices=[("sub", "SUB"),("team","Team"), ("class","CLASS"), ("ensemble", "ENSEMBLE"), ("club", "CLUB"), ("social", "SOCIAL")], default=("sub", "SUB"))
-    relatedCliques = models.ManyToManyField("self", blank=True)
-    picture = models.CharField(max_length=100, default='pic1')
-    displayName = models.CharField(max_length=30, default='group')
-
-    class Meta:
-        verbose_name = _('clique')
-        verbose_name_plural = _('cliques')
-    def __str__(self):
-        return f'{self.name}'
-
 class User(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4(), editable=False)
     bio = models.CharField(max_length=160, default='hi there. please call me Steve.')
     picture = models.CharField(max_length=100, default='pic1')
     theme = models.CharField(max_length=100, default='theme1')
     phone = models.CharField(max_length=100, default='123-456-7890')
-    cliques = models.ManyToManyField(Clique, related_name='usersCliques')
     def usercode(self):
         return f'{self.username}'
+
+
+class Clique(AbstractGroup):
+    workspace = models.CharField(max_length=100, default="general")
+    cliqueType = models.CharField(max_length=100, choices=[("sub", "SUB"),("team","Team"), ("class","CLASS"), ("ensemble", "ENSEMBLE"), ("club", "CLUB"), ("social", "SOCIAL")], default=("sub", "SUB"))
+    relatedCliques = models.ManyToManyField("self", blank=True)
+    picture = models.CharField(max_length=100, default='pic1')
+    displayName = models.CharField(max_length=30, default='group')
+    members = models.ManyToManyField(User, related_name='teamMembers', default=[])
+    managers = models.ManyToManyField(User, related_name='teamManagers', default=[])
+    owners = models.ManyToManyField(User, related_name='teamOwners', default=[])
+
+    class Meta:
+        verbose_name = _('clique')
+        verbose_name_plural = _('cliques')
+    def __str__(self):
+        return f'{self.name}'
 
 class Invitation(models.Model):#will need to delete each row once invitee_email joins team
     clique = models.ForeignKey(Clique, on_delete=models.CASCADE, related_name='cliqueInvitation')
@@ -90,9 +93,8 @@ class Event(models.Model):
 
 class Schedule(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='userSchedule')
-    cliques = models.ManyToManyField(Clique, related_name='cliquesSchedule')
     def __str__(self):
-        return f'{self.user} schedule for {self.cliques}.'
+        return f'{self.user} schedule'
 
 class TimeFrame(models.Model):
     schedule = models.ForeignKey(Schedule, on_delete=models.CASCADE, related_name='scheduleTimeFrame')
