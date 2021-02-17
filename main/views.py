@@ -157,6 +157,29 @@ class UserContacts(APIView):
             return Response(list(contacts), status=status.HTTP_200_OK)
         return Response(status=status.HTTP_404_NOT_FOUND)
 
+class UserSchedule(APIView):
+    def getScheduleObject(self, id):
+        try:
+            return Schedule.objects.get(user = id)
+        except User.DoesNotExist:
+            return False
+
+    def get(self, request, username):
+        userQuerySet = User.objects.values('username', 'id')
+        scheduleQuerySet = Schedule.objects.values('user')
+
+        userId = ''
+        for user in userQuerySet:
+            if user['username'] == username:
+                userId = user['id']
+        if userId:
+            for schedule in scheduleQuerySet:
+                if schedule['user'] == userId:
+                    scheduleObject = self.getScheduleObject(userId)
+                    serializedSchedule = ScheduleSerializer(scheduleObject).data
+                    return Response(serializedSchedule, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
 class CliqueDetails(APIView):
     permission_classes = (permissions.AllowAny,)
 

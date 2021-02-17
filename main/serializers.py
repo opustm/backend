@@ -30,7 +30,6 @@ class EventSerializer(serializers.ModelSerializer):
 class ScheduleSerializer(serializers.ModelSerializer):
     timeframes = serializers.SerializerMethodField()
     user = serializers.SerializerMethodField()
-    cliques = serializers.SerializerMethodField()
 
     class Meta:
         model = Schedule
@@ -42,10 +41,6 @@ class ScheduleSerializer(serializers.ModelSerializer):
 
     def get_user(self, obj):
         data = UserSerializer(obj.user).data
-        return data
-
-    def get_cliques(self, obj):
-        data = CliqueSerializer(obj.cliques.all(), many=True).data
         return data
 
 class TimeFrameSerializer(serializers.ModelSerializer):

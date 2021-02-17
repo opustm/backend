@@ -93,9 +93,8 @@ class Event(models.Model):
 
 class Schedule(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='userSchedule')
-    cliques = models.ManyToManyField(Clique, related_name='cliquesSchedule')
     def __str__(self):
-        return f'{self.user} schedule for {self.cliques}.'
+        return f'{self.user} schedule'
 
 class TimeFrame(models.Model):
     schedule = models.ForeignKey(Schedule, on_delete=models.CASCADE, related_name='scheduleTimeFrame')
