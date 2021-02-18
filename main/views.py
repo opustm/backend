@@ -412,6 +412,31 @@ class TeamRequests(APIView):
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
+class UserRequests(APIView):
+    permission_classes = (permissions.AllowAny,)
+
+    def get_object(self, requestId):
+        try:
+            return Request.objects.get(id=requestId)
+        except Request.DoesNotExist:
+            return False
+
+    def get(self, request, username, format=None):
+        userQuerySet = User.objects.values('id', 'username')
+        userid=None
+        for user in userQuerySet:
+            if user['name']==username:
+                userid=user['id']
+        if userid:
+            requestQuerySet=Request.objects.values('id', 'user')
+            requests=[]
+            for request in requestQuerySet:
+                if request["user"]==userid:
+                    requests.append(RequestSerializer(self.get_object(request['id'])).data)
+            return Response(requests, status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
 class InvitationDetails(APIView):
     permission_classes = (permissions.AllowAny,)
 
@@ -531,7 +556,7 @@ class UserAnnouncements(APIView):
             return False
 
     def get(self, request, username, format=None):
-        userQuerySet = User.objects.values('id', 'name')
+        userQuerySet = User.objects.values('id', 'username')
         userid=None
         for user in userQuerySet:
             if user['username']==username:
