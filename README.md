@@ -14,11 +14,11 @@ For the time-being, please do not register any more users unless testing email i
 - /users/{username}/contacts/
 - /users/{username}/schedule/
 - /userEmailDetails/{userEmail}/
-## Clique
-- /cliques/
-- /cliques/{cliqueId}/
-- /cliqueDetails/{cliqueName}/
-- /cliqueMembers/{cliqueName}/
+## Team
+- /teams/
+- /teams/{teamId}/
+- /teamDetails/{teamName}/
+- /teamMembers/{teamName}/
 ## Invitation
 - /invitations/
 - /invitation/{invitationId}/
@@ -27,11 +27,11 @@ For the time-being, please do not register any more users unless testing email i
 ## Request
 - /requests/
 - /requests/{requestId}/
-- /cliqueRequests/{cliqueName}/
+- /teamRequests/{teamName}/
 ## Event
 - /events/
-- /events/{cliqueEventId}/
-- /cliqueEvents/{cliqueName}/
+- /events/{teamEventId}/
+- /teamEvents/{teamName}/
 ## Schedule
 - /schedules/
 - /schedules/{scheduleId}/
@@ -42,21 +42,8 @@ For the time-being, please do not register any more users unless testing email i
 ## Announcement
 - /announcements/
 - /announcements/{announcementId}/
-- /cliqueAnnouncements/{cliqueName}/
-## Message
-- /directMessages/
-- /directMessages/{directMessageId}/
-- /userDirectMessagesSent/{username}/
-- /userDirectMessagesRecieved/{username}/
-- /cliqueMessages/
-- /cliqueMessages/{cliqueMessageId}/
-- /cliqueCliqueMessages/{cliqueName}/
-- /reactions/
-- /reactions/{reactionId}/
-## To Do
-- /toDos/
-- /toDos/{toDoId}/
-- /userToDos/{username}/
+- /teamAnnouncements/{teamName}/
+
 ## Token
 - /tokenAuth/
 ## Django Admin

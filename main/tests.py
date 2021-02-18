@@ -30,7 +30,7 @@ class UserTests(APITestCase):
             "phone":"1234567897",
             "picture":"pic",
             "theme":"theme2",
-            "cliques": []
+            "teams": []
             }
         response = self.client.post('/users/', data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -50,5 +50,5 @@ class UserTests(APITestCase):
             "phone":"1234567897",
             "picture":"pic",
             "theme":"theme2",
-            "cliques": []
+            "teams": []
             })

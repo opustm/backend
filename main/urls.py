@@ -4,25 +4,30 @@ from .views import *
 urlpatterns = [
     path('', index),
     path('currentUser/', current_user),
+    path('register/', UserList.as_view()),
     path('users/<str:username>/', UserDetails.as_view()),
     path('users/<str:username>/teams/',UserTeams.as_view()),
     path('users/<str:username>/contacts/',UserContacts.as_view()),
-    path('userEmailDetails/<str:userEmail>/', UserEmailDetails.as_view()),
-    path('cliqueDetails/<str:name>/', CliqueDetails.as_view()),
-    path('cliqueMembers/<str:name>/', CliqueMembers.as_view()),    
-    path('cliqueidMembers/<int:id>/', CliqueIdMembers.as_view()),    
-    path('cliqueAnnouncements/<str:name>/', CliqueAnnouncements.as_view()),  
-    path('userInvitations/<str:username>/', UserInvitations.as_view()),
-    path('invitationDetails/<str:inviteeEmail>/', InvitationDetails.as_view()),
-    path('cliqueRequests/<str:cliqueName>/', CliqueRequests.as_view()),
-    path('cliqueEvents/<str:name>/', CliqueEvents.as_view()),
-    path('userEvents/<str:username>/', UserEvents.as_view()),
-    path('userSchedules/<str:username>/', UserSchedules.as_view()),
-    path('scheduleTimeFrames/<int:scheduleId>/', ScheduleTimeFrames.as_view()),
-    path('cliqueCliqueMesssages/<str:name>/', CliqueCliqueMessages.as_view()),
-    path('userDirectMessagesSent/<str:username>/', UserDirectMessagesSent.as_view()),
-    path('userDirectMessagesRecieved/<str:username>/', UserDirectMessagesRecieved.as_view()),
-    path('userToDos/<str:username>/', UserToDos.as_view()),
-    path('relatedCliques/<str:name>/', RelatedCliques.as_view()),
-    path('manyRelatedCliques/<str:names>/', ManyRelatedCliques.as_view())
+    path('users/<str:username>/schedule/',UserSchedule.as_view()),
+
+    path('teams/<str:name>/', TeamDetails.as_view()),
+    path('teams/<str:name>/members/', TeamMembers.as_view()),
+  
+    path('announcements/team/<str:name>/', TeamAnnouncements.as_view()),  
+    path('announcements/user/<str:username>/', UserAnnouncements.as_view()),  
+
+    path('events/team/<str:name>/', TeamEvents.as_view()),
+    path('events/user/<str:username>/', UserEvents.as_view()),
+
+    path('requests/team/<str:name>/', TeamRequests.as_view()),
+    path('requests/user/<str:userame>/', UserRequests.as_view()),
+
+    # path('userInvitations/<str:username>/', UserInvitations.as_view()),
+    # path('teamInvitations/<str:name>/', InvitationDetails.as_view()),
+
+    # path('userSchedules/<str:username>/', UserSchedules.as_view()),
+    # path('scheduleTimeFrames/<int:scheduleId>/', ScheduleTimeFrames.as_view()),
+
+    # path('relatedTeams/<str:name>/', RelatedTeams.as_view()),
+    # path('manyRelatedTeams/<str:names>/', ManyRelatedTeams.as_view())
 ]

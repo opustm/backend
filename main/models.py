@@ -33,7 +33,7 @@ class AbstractGroup(models.Model):
     class Meta:
         verbose_name = _('group')
         verbose_name_plural = _('groups')
-        abstract = True#way to making abstract class! :O
+        abstract = True
 
     def __str__(self):
         return self.name
@@ -50,25 +50,30 @@ class User(AbstractUser):
     def usercode(self):
         return f'{self.username}'
 
-
-class Clique(AbstractGroup):
+class Team(AbstractGroup):
     workspace = models.CharField(max_length=100, default="general")
-    cliqueType = models.CharField(max_length=100, choices=[("sub", "SUB"),("team","Team"), ("class","CLASS"), ("ensemble", "ENSEMBLE"), ("club", "CLUB"), ("social", "SOCIAL")], default=("sub", "SUB"))
-    relatedCliques = models.ManyToManyField("self", blank=True)
+    teamType = models.CharField(max_length=100, choices=[("sub", "SUB"),("team","TEAM"), ("class","CLASS"), ("ensemble", "ENSEMBLE"), ("club", "CLUB"), ("social", "SOCIAL")], default=("sub", "SUB"))
+    relatedteams = models.ManyToManyField("self", blank=True)
     picture = models.CharField(max_length=100, default='pic1')
     displayName = models.CharField(max_length=30, default='group')
-    members = models.ManyToManyField(User, related_name='teamMembers', default=[])
-    managers = models.ManyToManyField(User, related_name='teamManagers', default=[])
-    owners = models.ManyToManyField(User, related_name='teamOwners', default=[])
+    members = models.ManyToManyField(User, related_name='teamMembers', default=[], blank=True)
+    managers = models.ManyToManyField(User, related_name='teamManagers', default=[], blank=True)
+    owners = models.ManyToManyField(User, related_name='teamOwners', default=[], blank=True)
 
     class Meta:
-        verbose_name = _('clique')
-        verbose_name_plural = _('cliques')
+        verbose_name = _('team')
+        verbose_name_plural = _('teams')
     def __str__(self):
         return f'{self.name}'
 
+class Request(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='userRequest')
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='teamRequest')
+    message = models.CharField(max_length=100, default='Please let me join our group.')
+    dateRequested = models.DateTimeField()
+
 class Invitation(models.Model):#will need to delete each row once invitee_email joins team
-    clique = models.ForeignKey(Clique, on_delete=models.CASCADE, related_name='cliqueInvitation')
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='teamInvitation')
     invitee = models.ForeignKey(User, on_delete=models.CASCADE, related_name='invitee', blank=True)
     inviter = models.ForeignKey(User, on_delete=models.CASCADE, related_name='inviter', blank=True)
     message = models.CharField(max_length=100, default='Please join our group.')
@@ -76,20 +81,31 @@ class Invitation(models.Model):#will need to delete each row once invitee_email 
     dateInvited=models.DateTimeField()
     
     def __str__(self):
-        return '{} invited to {} by {}'.format(self.inviteeEmail, self.clique, self.inviter)
-
+        return f'{self.inviteeEmail} invited to {self.team} by {self.inviter}'
+        
 class Event(models.Model):
-    clique = models.ForeignKey(Clique, on_delete=models.CASCADE, related_name='cliqueEvent', blank=True, null=True)#ONE TEAM CAN HAVE MANY EVENTS (ONE2M)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='userEvent', blank=True, null=True)#ONE USER CAN HAVE MANY EVENTS (ONE2M)
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='teamEvent', blank=True, null=True)#ONE TEAM CAN HAVE MANY EVENTS (ONE2M)
+    user = models.ForeignKey(User, default=1, on_delete=models.CASCADE, related_name='userEvent')#ONE USER CAN HAVE MANY EVENTS (ONE2M)
     name = models.CharField(max_length=100, default='event')
     start = models.DateTimeField()
     end = models.DateTimeField()
-    invited = models.ManyToManyField(User, related_name='eventInvited', blank=True, null=True)
-    notGoing = models.ManyToManyField(User, related_name='notGoing', blank=True, null=True)
+    invited = models.ManyToManyField(User, related_name='eventInvited', blank=True)
+    notGoing = models.ManyToManyField(User, related_name='notGoing', blank=True)
     details = models.CharField(max_length=100, default='This event is blah blah blah..')
     picture = models.CharField(max_length=100, default='pic1')
     def __str__(self):
-        return f"{self.name} for {self.clique}."
+        return f"{self.name} made by {self.user}."
+
+class Announcement(models.Model):
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='teamAnnouncement', blank=True, null=True)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='eventAnnouncement', blank=True, null=True)
+    creator = models.ForeignKey(User, default=1, on_delete=models.CASCADE, related_name='creatorAnnouncement')
+    priority = models.IntegerField(default=1)
+    announcement = models.CharField(max_length=280, default='\"Do your hw\" -management')
+    end = models.DateTimeField(blank=True, null=True)
+    acknowledged = models.ManyToManyField(User, related_name='userAnnouncementAcknowledgment', blank=True)
+    def __str__(self):
+        return f'{self.announcement} due by {self.end}. Priority {self.priority}. Completed by {self.acknowledged} so far.'
 
 class Schedule(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='userSchedule')
@@ -104,42 +120,21 @@ class TimeFrame(models.Model):
     def __str__(self):
         return f'TimeFrame for {self.schedule} Available from {self.start} to {self.end} on {self.weekday}.'
 
-class Announcement(models.Model):
-    clique = models.ForeignKey(Clique, on_delete=models.CASCADE, related_name='cliqueAnnouncement')
-    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='eventAnnouncement', blank=True, null=True)
-    creator = models.ForeignKey(User, default=1, on_delete=models.CASCADE, related_name='creatorAnnouncement')
-    priority = models.IntegerField(default=1)
-    announcement = models.CharField(max_length=280, default='\"Do your hw\" -management')
-    end = models.DateTimeField(blank=True, null=True)
-    acknowledged = models.ManyToManyField(User, related_name='userAnnouncementAcknowledgment')
-    def __str__(self):
-        return f'{self.clique}: {self.announcement} with event {self.event}.'
+# class Reaction(models.Model):
+#     reactor = models.ForeignKey(User, on_delete=models.CASCADE, related_name='userReactor')
+#     reaction = models.CharField(max_length=100, choices=[("thumbs up", "THUMBS UP"),("dislike","DISLIKE")],  default=("dislike", "DISLIKE"))
 
-class Reaction(models.Model):
-    reactor = models.ForeignKey(User, on_delete=models.CASCADE, related_name='userReactor')
-    reaction = models.CharField(max_length=100, choices=[("thumbs up", "THUMBS UP"),("dislike","DISLIKE")],  default=("dislike", "DISLIKE"))
+# class DirectMessage(models.Model):
+#     sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='userSenderDM')
+#     recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='userRecipientDM')
+#     message = models.CharField(max_length=500, default='message text')
+#     sentAt = models.DateTimeField()
+#     reaction = models.ManyToManyField(Reaction, related_name='directMessageReaction')
 
-class DirectMessage(models.Model):
-    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='userSenderDM')
-    recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='userRecipientDM')
-    message = models.CharField(max_length=500, default='message text')
-    sentAt = models.DateTimeField()
-    reaction = models.ManyToManyField(Reaction, related_name='directMessageReaction')
+# class TeamMessage(models.Model):
+#     sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='userSenderCM')
+#     recipient = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='teamRecipientCM')
+#     message = models.CharField(max_length=500, default='message text')
+#     sentAt = models.DateTimeField()
+#     reaction = models.ManyToManyField(Reaction, related_name='teamMessageReaction')
 
-class CliqueMessage(models.Model):
-    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='userSenderCM')
-    recipient = models.ForeignKey(Clique, on_delete=models.CASCADE, related_name='cliqueRecipientCM')
-    message = models.CharField(max_length=500, default='message text')
-    sentAt = models.DateTimeField()
-    reaction = models.ManyToManyField(Reaction, related_name='cliqueMessageReaction')
-
-class ToDo(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='userToDo')
-    name = models.CharField(max_length=100, default='laundry')
-    due = models.DateTimeField()
-
-class Request(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='userRequest')
-    clique = models.ForeignKey(Clique, on_delete=models.CASCADE, related_name='cliqueRequest')
-    message = models.CharField(max_length=100, default='Please let me join our group.')
-    dateRequested = models.DateTimeField()
