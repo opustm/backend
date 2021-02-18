@@ -18,9 +18,23 @@ class InvitationSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class AnnouncementSerializer(serializers.ModelSerializer):
+    creator = serializers.SerializerMethodField()
+    acknowledged = serializers.SerializerMethodField()
+
     class Meta:
         model = Announcement
         fields = '__all__'
+
+    def get_creator(self, obj):
+        data = UserSerializer(obj.creator).data['username']
+        return data
+
+    def get_acknowledged(self, obj):
+        data = UserSerializer(obj.acknowledged, many=True).data
+        lst=[]
+        for u in data:
+            lst.append(u['username'])
+        return lst
 
 class EventSerializer(serializers.ModelSerializer):
     class Meta:
