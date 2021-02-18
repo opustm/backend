@@ -10,7 +10,7 @@ from rest_framework.views import APIView
 from rest_framework import viewsets
 import json
 
-from .models import Event, ToDo, Request, Invitation, User, Team, Schedule, TimeFrame, Announcement, Reaction, DirectMessage, TeamMessage
+from .models import *
 from .serializers import *
 
 class UserDetails(APIView):
@@ -521,117 +521,114 @@ class TeamAnnouncements(APIView):
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-class TeamTeamMessages(APIView):
+class UserAnnouncements(APIView):
     permission_classes = (permissions.AllowAny,)
 
-    def get_object(self, teammessageid):
+    def get_object(self, announcementid):
         try:
-            return TeamMessage.objects.get(id=teammessageid)
-        except TeamMessage.DoesNotExist:
+            return Announcement.objects.get(id=announcementid)
+        except Announcement.DoesNotExist:
             return False
 
-    def get(self, request, name, format=None):
-        teamQuerySet = Team.objects.values('id', 'name')
-        teamid=None
-        for team in teamQuerySet:
-            if team['name']==name:
-                teamid=team['id']
-        if teamid:
-            teamMessageQuerySet=TeamMessage.objects.values('id', 'team')
-            teamMessages=[]
-            for teamMessage in teamMessageQuerySet:
-                if teamMessage["team"]==teamid:
-                    teamMessages.append(TeamMessageSerializer(self.get_object(teamMessage['id'])).data)
-            return Response(teamMessages, status=status.HTTP_200_OK)
+    def get(self, request, username, format=None):
+        userQuerySet = User.objects.values('id', 'name')
+        userid=None
+        for user in userQuerySet:
+            if user['username']==username:
+                userid=user['id']
+        if userid:
+            announcementQuerySet=Announcement.objects.values('id', 'creator')
+            announcements=[]
+            for announcement in announcementQuerySet:
+                if announcement["creator"]==userid:
+                    announcements.append(AnnouncementSerializer(self.get_object(announcement['id'])).data)
+            return Response(announcements, status=status.HTTP_200_OK)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-class UserDirectMessagesSent(APIView):
-    permission_classes = (permissions.AllowAny,)
+# class TeamTeamMessages(APIView):
+#     permission_classes = (permissions.AllowAny,)
 
-    def get_object(self, directMessageid):
-        try:
-            return DirectMessage.objects.get(id=directMessageid)
-        except DirectMessage.DoesNotExist:
-            return False
+#     def get_object(self, teammessageid):
+#         try:
+#             return TeamMessage.objects.get(id=teammessageid)
+#         except TeamMessage.DoesNotExist:
+#             return False
 
-    def get(self, request, username, format=None):
-        userQuerySet = User.objects.values('id', 'username')
-        userid=None
-        for user in userQuerySet:
-            if user['username']==username:
-                userid=user['id']
-        if userid:
-            directMessageQuerySet = DirectMessage.objects.values('sender', 'id')
-            idsOfUsersDirectMessages=[]
-            for directMessage in directMessageQuerySet:
-                if directMessage['sender']==userid:
-                    idsOfUsersDirectMessages.append(directMessage['id'])
-            if idsOfUsersDirectMessages:
-                directMessages=[]
-                for directMessageid in idsOfUsersDirectMessages:
-                    directMessages.append(DirectMessageSerializer(self.get_object(directMessageid)).data)
-                if directMessages:
-                    return Response(directMessages, status=status.HTTP_200_OK)
-        return Response(status=status.HTTP_404_NOT_FOUND)
+#     def get(self, request, name, format=None):
+#         teamQuerySet = Team.objects.values('id', 'name')
+#         teamid=None
+#         for team in teamQuerySet:
+#             if team['name']==name:
+#                 teamid=team['id']
+#         if teamid:
+#             teamMessageQuerySet=TeamMessage.objects.values('id', 'team')
+#             teamMessages=[]
+#             for teamMessage in teamMessageQuerySet:
+#                 if teamMessage["team"]==teamid:
+#                     teamMessages.append(TeamMessageSerializer(self.get_object(teamMessage['id'])).data)
+#             return Response(teamMessages, status=status.HTTP_200_OK)
+#         else:
+#             return Response(status=status.HTTP_404_NOT_FOUND)
 
-class UserDirectMessagesRecieved(APIView):
-    permission_classes = (permissions.AllowAny,)
+# class UserDirectMessagesSent(APIView):
+#     permission_classes = (permissions.AllowAny,)
 
-    def get_object(self, directMessageid):
-        try:
-            return DirectMessage.objects.get(id=directMessageid)
-        except DirectMessage.DoesNotExist:
-            return False
+#     def get_object(self, directMessageid):
+#         try:
+#             return DirectMessage.objects.get(id=directMessageid)
+#         except DirectMessage.DoesNotExist:
+#             return False
 
-    def get(self, request, username, format=None):
-        userQuerySet = User.objects.values('id', 'username')
-        userid=None
-        for user in userQuerySet:
-            if user['username']==username:
-                userid=user['id']
-        if userid:
-            directMessageQuerySet = DirectMessage.objects.values('recipient', 'id')
-            idsOfUsersDirectMessages=[]
-            for directMessage in directMessageQuerySet:
-                if directMessage['recipient']==userid:
-                    idsOfUsersDirectMessages.append(directMessage['id'])
-            if idsOfUsersDirectMessages:
-                directMessages=[]
-                for directMessageid in idsOfUsersDirectMessages:
-                    directMessages.append(DirectMessageSerializer(self.get_object(directMessageid)).data)
-                if directMessages:
-                    return Response(directMessages, status=status.HTTP_200_OK)
-        return Response(status=status.HTTP_404_NOT_FOUND)
+#     def get(self, request, username, format=None):
+#         userQuerySet = User.objects.values('id', 'username')
+#         userid=None
+#         for user in userQuerySet:
+#             if user['username']==username:
+#                 userid=user['id']
+#         if userid:
+#             directMessageQuerySet = DirectMessage.objects.values('sender', 'id')
+#             idsOfUsersDirectMessages=[]
+#             for directMessage in directMessageQuerySet:
+#                 if directMessage['sender']==userid:
+#                     idsOfUsersDirectMessages.append(directMessage['id'])
+#             if idsOfUsersDirectMessages:
+#                 directMessages=[]
+#                 for directMessageid in idsOfUsersDirectMessages:
+#                     directMessages.append(DirectMessageSerializer(self.get_object(directMessageid)).data)
+#                 if directMessages:
+#                     return Response(directMessages, status=status.HTTP_200_OK)
+#         return Response(status=status.HTTP_404_NOT_FOUND)
 
-class UserToDos(APIView):
-    permission_classes = (permissions.AllowAny,)
+# class UserDirectMessagesRecieved(APIView):
+#     permission_classes = (permissions.AllowAny,)
 
-    def get_object(self, toDoid):
-        try:
-            return ToDo.objects.get(id=toDoid)
-        except ToDo.DoesNotExist:
-            return False
+#     def get_object(self, directMessageid):
+#         try:
+#             return DirectMessage.objects.get(id=directMessageid)
+#         except DirectMessage.DoesNotExist:
+#             return False
 
-    def get(self, request, username, format=None):
-        userQuerySet = User.objects.values('id', 'username')
-        userid=None
-        for user in userQuerySet:
-            if user['username']==username:
-                userid=user['id']
-        if userid:
-            toDoQuerySet = ToDo.objects.values('user', 'id')
-            idsOfUsersToDos=[]
-            for toDo in toDoQuerySet:
-                if toDo['user']==userid:
-                    idsOfUsersToDos.append(toDo['id'])
-            if idsOfUsersToDos:
-                toDos=[]
-                for toDoid in idsOfUsersToDos:
-                    toDos.append(ToDoSerializer(self.get_object(toDoid)).data)
-                if toDos:
-                    return Response(toDos, status=status.HTTP_200_OK)
-        return Response(status=status.HTTP_404_NOT_FOUND)
+#     def get(self, request, username, format=None):
+#         userQuerySet = User.objects.values('id', 'username')
+#         userid=None
+#         for user in userQuerySet:
+#             if user['username']==username:
+#                 userid=user['id']
+#         if userid:
+#             directMessageQuerySet = DirectMessage.objects.values('recipient', 'id')
+#             idsOfUsersDirectMessages=[]
+#             for directMessage in directMessageQuerySet:
+#                 if directMessage['recipient']==userid:
+#                     idsOfUsersDirectMessages.append(directMessage['id'])
+#             if idsOfUsersDirectMessages:
+#                 directMessages=[]
+#                 for directMessageid in idsOfUsersDirectMessages:
+#                     directMessages.append(DirectMessageSerializer(self.get_object(directMessageid)).data)
+#                 if directMessages:
+#                     return Response(directMessages, status=status.HTTP_200_OK)
+#         return Response(status=status.HTTP_404_NOT_FOUND)
+
 
 
 def index(request):

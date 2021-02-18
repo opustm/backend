@@ -1,7 +1,6 @@
 from rest_framework import serializers
 from rest_framework_jwt.settings import api_settings
-from .models import Event, Request, ToDo, Invitation, User, Team, Schedule, TimeFrame, Announcement, DirectMessage, TeamMessage, Reaction
-
+from .models import *
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -86,25 +85,6 @@ class TimeFrameSerializer(serializers.ModelSerializer):
         model = TimeFrame
         fields = '__all__'
 
-class DirectMessageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = DirectMessage
-        fields = '__all__'
-
-class TeamMessageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = TeamMessage
-        fields = '__all__'
-
-class ReactionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Reaction
-        fields = '__all__'
-
-class ToDoSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ToDo
-        fields = '__all__'
 
 class RequestSerializer(serializers.ModelSerializer):
     class Meta:

@@ -63,24 +63,6 @@ def documentation(request):
                 <li><a href="/announcements/1/">/announcements/{announcementId}/</a></li>
                 <li><a href="/teamAnnouncements/Dog Lovers/">/teamAnnouncements/{teamName}/</a></li>
             </ul>
-            <h3>Message</h3>
-            <ul>
-                <li><a href="/directMessages/">/directMessages/</a></li>
-                <li><a href="/directMessages/1/">/directMessages/{directMessageId}/</a></li>
-                <li><a href="/userDirectMessagesSent/barackO/">/userDirectMessagesSent/{userame}/</a></li>
-                <li><a href="/userDirectMessagesRecieved/barackO/">/userDirectMessagesRecieved/{userame}/</a></li>
-                <li><a href="/teamMessages/">/teamMessages/</a></li>
-                <li><a href="/teamMessages/1/">/teamMessages/{teamMessageId}/</a></li>
-                <li><a href="/teamTeamMessages/Dog Lovers/">/teamTeamMessages/{teamName}/</a></li>
-                <li><a href="/reactions/">/reactions/</a></li>
-                <li><a href="/reactions/1/">/reactions/{reactionId}/</a></li>
-            </ul>
-            <h3>To Do</h3>
-            <ul>
-                <li><a href="/toDos/">/toDos/</a></li>
-                <li><a href="/toDos/1/">/toDos/{toDoId}/</a></li>
-                <li><a href="/userToDos/barackO/">/userToDos/{username}/</a></li>
-            </ul>
         </body>
     </html>
     '''

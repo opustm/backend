@@ -44,20 +44,7 @@ For the time-being, please do not register any more users unless testing email i
 - /announcements/
 - /announcements/{announcementId}/
 - /teamAnnouncements/{teamName}/
-## Message
-- /directMessages/
-- /directMessages/{directMessageId}/
-- /userDirectMessagesSent/{username}/
-- /userDirectMessagesRecieved/{username}/
-- /teamMessages/
-- /teamMessages/{teamMessageId}/
-- /teamteamMessages/{teamName}/
-- /reactions/
-- /reactions/{reactionId}/
-## To Do
-- /toDos/
-- /toDos/{toDoId}/
-- /userToDos/{username}/
+
 ## Token
 - /tokenAuth/
 ## Django Admin
