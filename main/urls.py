@@ -9,6 +9,7 @@ urlpatterns = [
     path('users/<str:username>/contacts/',UserContacts.as_view()),
     path('userEmailDetails/<str:userEmail>/', UserEmailDetails.as_view()),
     path('cliqueDetails/<str:name>/', CliqueDetails.as_view()),
+    path('team/<str:name>/', CliqueDetails.as_view()), #new
     path('cliqueMembers/<str:name>/', CliqueMembers.as_view()),    
     path('cliqueidMembers/<int:id>/', CliqueIdMembers.as_view()),    
     path('cliqueAnnouncements/<str:name>/', CliqueAnnouncements.as_view()),  
