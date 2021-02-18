@@ -16,16 +16,16 @@ def documentation(request):
             <ul>
                 <li><a href="/currentUser/">/currentUser/</a></li>
                 <li><a href="/users/">/users/</a></li>
-                <li><a href="/users/test1/">/users/{username}/</a></li>
-                <li><a href="/users/test1/teams/">/users/{username}/teams/</a></li>
-                <li><a href="/users/test1/contacts/">/users/{username}/contacts/</a></li>
-                <li><a href="/users/test1/schedule/">/users/{username}/schedule/</a></li>
-                <li><a href="/userEmailDetails/barackO@example.com/">/userEmailDetails/{userEmail}/</a></li>
+                <li><a href="/users/register/">/users/register/</a></li>
+                <li><a href="/users/admin/">/users/{username}/</a></li>
+                <li><a href="/users/admin/teams/">/users/{username}/teams/</a></li>
+                <li><a href="/users/admin/contacts/">/users/{username}/contacts/</a></li>
+                <li><a href="/users/admin/schedule/">/users/{username}/schedule/</a></li>
             </ul>
             <h3>Team</h3>
             <ul>
                 <li><a href="/teams/">/teams/</a></li>
-                <li><a href="/teams/1/">/teams/{teamId}/</a></li>
+                <li><a href="/teams/test/">/teams/{team}/</a></li>
                 <li><a href="/teamDetails/Poodle People/">/teamDetails/{teamName}/</a></li>
                 <li><a href="/teamMembers/Poodle People/">/teamMembers/{teamName}/</a></li>
             </ul>

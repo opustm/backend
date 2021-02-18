@@ -4,6 +4,7 @@ from .views import *
 urlpatterns = [
     path('', index),
     path('currentUser/', current_user),
+    path('users/register/', UserList.as_view()),
     path('users/<str:username>/', UserDetails.as_view()),
     path('users/<str:username>/teams/',UserTeams.as_view()),
     path('users/<str:username>/contacts/',UserContacts.as_view()),
@@ -12,8 +13,8 @@ urlpatterns = [
     path('teams/<str:name>/', TeamDetails.as_view()),
     path('teams/<str:name>/members/', TeamMembers.as_view()),
   
-    path('teamAnnouncements/<str:name>/', TeamAnnouncements.as_view()),  
-    path('userAnnouncements/<str:username>/', UserAnnouncements.as_view()),  
+    path('announcements/team/<str:name>/', TeamAnnouncements.as_view()),  
+    path('announcements/<str:username>/', UserAnnouncements.as_view()),  
 
     path('teamEvents/<str:name>/', TeamEvents.as_view()),
     path('userEvents/<str:username>/', UserEvents.as_view()),

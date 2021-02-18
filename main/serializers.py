@@ -38,6 +38,7 @@ class TeamSerializer(serializers.ModelSerializer):
 class InvitationSerializer(serializers.ModelSerializer):
     invitee = serializers.SerializerMethodField()
     inviter = serializers.SerializerMethodField()
+    team = serializers.SerializerMethodField()
     class Meta:
         model = Invitation
         fields = '__all__'
@@ -50,10 +51,15 @@ class InvitationSerializer(serializers.ModelSerializer):
         data = UserSerializer(obj.inviter).data['username']
         return data
 
+    def get_team(self, obj):
+        data = TeamSerializer(obj.team).data['name']
+        return data
+
 class AnnouncementSerializer(serializers.ModelSerializer):
     creator = serializers.SerializerMethodField()
     acknowledged = serializers.SerializerMethodField()
-
+    team = serializers.SerializerMethodField()
+    
     class Meta:
         model = Announcement
         fields = '__all__'
@@ -69,10 +75,15 @@ class AnnouncementSerializer(serializers.ModelSerializer):
             lst.append(u['username'])
         return lst
 
+    def get_team(self, obj):
+        data = TeamSerializer(obj.team).data['name']
+        return data
+
 class EventSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
     invited = serializers.SerializerMethodField()
     notGoing = serializers.SerializerMethodField()
+    team = serializers.SerializerMethodField()
 
     class Meta:
         model = Event
@@ -95,6 +106,11 @@ class EventSerializer(serializers.ModelSerializer):
         for u in data:
             lst.append(u['username'])
         return lst
+
+    def get_team(self, obj):
+        data = TeamSerializer(obj.team).data['name']
+        return data
+
 
 class ScheduleSerializer(serializers.ModelSerializer):
     timeframes = serializers.SerializerMethodField()
@@ -119,6 +135,7 @@ class TimeFrameSerializer(serializers.ModelSerializer):
 
 class RequestSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
+    team = serializers.SerializerMethodField()
 
     class Meta:
         model = Request
@@ -126,6 +143,10 @@ class RequestSerializer(serializers.ModelSerializer):
 
     def get_user(self, obj):
         data = UserSerializer(obj.user).data['username']
+        return data
+
+    def get_team(self, obj):
+        data = TeamSerializer(obj.team).data['name']
         return data
 
 class UserSerializerWithToken(serializers.ModelSerializer):
