@@ -1,16 +1,40 @@
 from rest_framework import serializers
 from rest_framework_jwt.settings import api_settings
-from .models import Event, Request, ToDo, Invitation, User, Clique, Schedule, TimeFrame, Announcement, DirectMessage, CliqueMessage, Reaction
+from .models import Event, Request, ToDo, Invitation, User, Team, Schedule, TimeFrame, Announcement, DirectMessage, TeamMessage, Reaction
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('username', 'first_name', 'last_name', 'email', 'bio', 'picture', 'theme', 'phone')
 
-class CliqueSerializer(serializers.ModelSerializer):
+class TeamSerializer(serializers.ModelSerializer):
+    members = serializers.SerializerMethodField()
+    managers = serializers.SerializerMethodField()
+    owners = serializers.SerializerMethodField()
     class Meta:
-        model = Clique
+        model = Team
         fields = '__all__'
+
+    def get_members(self, obj):
+        data = UserSerializer(obj.members, many=True).data
+        lst=[]
+        for u in data:
+            lst.append(u['username'])
+        return lst
+
+    def get_managers(self, obj):
+        data = UserSerializer(obj.managers, many=True).data
+        lst=[]
+        for u in data:
+            lst.append(u['username'])
+        return lst
+
+    def get_owners(self, obj):
+        data = UserSerializer(obj.owners, many=True).data
+        lst=[]
+        for u in data:
+            lst.append(u['username'])
+        return lst
 
 class InvitationSerializer(serializers.ModelSerializer):
     class Meta:
@@ -67,9 +91,9 @@ class DirectMessageSerializer(serializers.ModelSerializer):
         model = DirectMessage
         fields = '__all__'
 
-class CliqueMessageSerializer(serializers.ModelSerializer):
+class TeamMessageSerializer(serializers.ModelSerializer):
     class Meta:
-        model = CliqueMessage
+        model = TeamMessage
         fields = '__all__'
 
 class ReactionSerializer(serializers.ModelSerializer):

@@ -22,12 +22,12 @@ def documentation(request):
                 <li><a href="/users/test1/schedule/">/users/{username}/schedule/</a></li>
                 <li><a href="/userEmailDetails/barackO@example.com/">/userEmailDetails/{userEmail}/</a></li>
             </ul>
-            <h3>Clique</h3>
+            <h3>Team</h3>
             <ul>
-                <li><a href="/cliques/">/cliques/</a></li>
-                <li><a href="/cliques/1/">/cliques/{cliqueId}/</a></li>
-                <li><a href="/cliqueDetails/Poodle People/">/cliqueDetails/{cliqueName}/</a></li>
-                <li><a href="/cliqueMembers/Poodle People/">/cliqueMembers/{cliqueName}/</a></li>
+                <li><a href="/teams/">/teams/</a></li>
+                <li><a href="/teams/1/">/teams/{teamId}/</a></li>
+                <li><a href="/teamDetails/Poodle People/">/teamDetails/{teamName}/</a></li>
+                <li><a href="/teamMembers/Poodle People/">/teamMembers/{teamName}/</a></li>
             </ul>
             <h3>Invitation</h3>
             <ul>
@@ -40,13 +40,13 @@ def documentation(request):
             <ul>
                 <li><a href="/requests/">/requests/</a></li>
                 <li><a href="/requests/1/">/requests/{requestId}/</a></li>
-                <li><a href="/cliqueRequests/Dog Lovers/">/cliqueRequests/{cliqueName}/</a></li>
+                <li><a href="/teamRequests/Dog Lovers/">/teamRequests/{teamName}/</a></li>
             </ul>
             <h3>Event</h3>
             <ul>
                 <li><a href="/events/">/events/</a></li>
-                <li><a href="/events/1/">/events/{cliqueEventId}/</a></li>
-                <li><a href="/cliqueEvents/Dog Lovers/">/cliqueEvents/{cliqueName}/</a></li>
+                <li><a href="/events/1/">/events/{teamEventId}/</a></li>
+                <li><a href="/teamEvents/Dog Lovers/">/teamEvents/{teamName}/</a></li>
             </ul>
             <h3>Schedule</h3>
             <ul>
@@ -61,7 +61,7 @@ def documentation(request):
             <ul>
                 <li><a href="/announcements/">/announcements/</a></li>
                 <li><a href="/announcements/1/">/announcements/{announcementId}/</a></li>
-                <li><a href="/cliqueAnnouncements/Dog Lovers/">/cliqueAnnouncements/{cliqueName}/</a></li>
+                <li><a href="/teamAnnouncements/Dog Lovers/">/teamAnnouncements/{teamName}/</a></li>
             </ul>
             <h3>Message</h3>
             <ul>
@@ -69,9 +69,9 @@ def documentation(request):
                 <li><a href="/directMessages/1/">/directMessages/{directMessageId}/</a></li>
                 <li><a href="/userDirectMessagesSent/barackO/">/userDirectMessagesSent/{userame}/</a></li>
                 <li><a href="/userDirectMessagesRecieved/barackO/">/userDirectMessagesRecieved/{userame}/</a></li>
-                <li><a href="/cliqueMessages/">/cliqueMessages/</a></li>
-                <li><a href="/cliqueMessages/1/">/cliqueMessages/{cliqueMessageId}/</a></li>
-                <li><a href="/cliqueCliqueMessages/Dog Lovers/">/cliqueCliqueMessages/{cliqueName}/</a></li>
+                <li><a href="/teamMessages/">/teamMessages/</a></li>
+                <li><a href="/teamMessages/1/">/teamMessages/{teamMessageId}/</a></li>
+                <li><a href="/teamTeamMessages/Dog Lovers/">/teamTeamMessages/{teamName}/</a></li>
                 <li><a href="/reactions/">/reactions/</a></li>
                 <li><a href="/reactions/1/">/reactions/{reactionId}/</a></li>
             </ul>
