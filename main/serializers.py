@@ -36,9 +36,19 @@ class TeamSerializer(serializers.ModelSerializer):
         return lst
 
 class InvitationSerializer(serializers.ModelSerializer):
+    invitee = serializers.SerializerMethodField()
+    inviter = serializers.SerializerMethodField()
     class Meta:
         model = Invitation
         fields = '__all__'
+
+    def get_invitee(self, obj):
+        data = UserSerializer(obj.invitee).data['username']
+        return data
+
+    def get_inviter(self, obj):
+        data = UserSerializer(obj.inviter).data['username']
+        return data
 
 class AnnouncementSerializer(serializers.ModelSerializer):
     creator = serializers.SerializerMethodField()
@@ -60,9 +70,31 @@ class AnnouncementSerializer(serializers.ModelSerializer):
         return lst
 
 class EventSerializer(serializers.ModelSerializer):
+    user = serializers.SerializerMethodField()
+    invited = serializers.SerializerMethodField()
+    notGoing = serializers.SerializerMethodField()
+
     class Meta:
         model = Event
         fields = '__all__'
+
+    def get_user(self, obj):
+        data = UserSerializer(obj.user).data['username']
+        return data
+
+    def get_invited(self, obj):
+        data = UserSerializer(obj.invited, many=True).data
+        lst=[]
+        for u in data:
+            lst.append(u['username'])
+        return lst
+
+    def get_notGoing(self, obj):
+        data = UserSerializer(obj.notGoing, many=True).data
+        lst=[]
+        for u in data:
+            lst.append(u['username'])
+        return lst
 
 class ScheduleSerializer(serializers.ModelSerializer):
     timeframes = serializers.SerializerMethodField()
@@ -77,7 +109,7 @@ class ScheduleSerializer(serializers.ModelSerializer):
         return data
 
     def get_user(self, obj):
-        data = UserSerializer(obj.user).data
+        data = UserSerializer(obj.user).data['username']
         return data
 
 class TimeFrameSerializer(serializers.ModelSerializer):
@@ -85,11 +117,16 @@ class TimeFrameSerializer(serializers.ModelSerializer):
         model = TimeFrame
         fields = '__all__'
 
-
 class RequestSerializer(serializers.ModelSerializer):
+    user = serializers.SerializerMethodField()
+
     class Meta:
         model = Request
         fields = '__all__'
+
+    def get_user(self, obj):
+        data = UserSerializer(obj.user).data['username']
+        return data
 
 class UserSerializerWithToken(serializers.ModelSerializer):
     token = serializers.SerializerMethodField()

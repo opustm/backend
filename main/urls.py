@@ -19,7 +19,7 @@ urlpatterns = [
     path('userEvents/<str:username>/', UserEvents.as_view()),
 
     path('teamRequests/<str:name>/', TeamRequests.as_view()),
-    # path('userRequests/<str:userame>/', TeamRequests.as_view()), #not created yet
+    # path('userRequests/<str:userame>/', UserRequests.as_view()), #not created yet
 
     # path('userInvitations/<str:username>/', UserInvitations.as_view()),
     # path('teamInvitations/<str:name>/', InvitationDetails.as_view()),
