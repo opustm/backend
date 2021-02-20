@@ -5,7 +5,6 @@ from .router import router
 from rest_framework_jwt.views import obtain_jwt_token
 
 
-
 urlpatterns = [
     path('tokenAuth/', obtain_jwt_token),
     path('', documentation, name='documentation'),

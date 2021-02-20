@@ -4,9 +4,19 @@ from .views import *
 urlpatterns = [
     path('', index),
     path('currentUser/', current_user),
-    path('users/<str:username>/', UserDetails.as_view()),
-    path('users/<str:username>/teams/',UserTeams.as_view()),
-    path('users/<str:username>/contacts/',UserContacts.as_view()),
+
+    # Routes for Users
+    # Name attributes are added for testing convenience
+    path('users/<str:username>/', 
+        UserDetails.as_view(), 
+        name="user_by_username"),
+    path('users/<str:username>/teams/',
+        UserTeams.as_view(), 
+        name="teams_by_username"),
+    path('users/<str:username>/contacts/',
+        UserContacts.as_view(),
+        name="contacts_by_user"),
+    
     path('userEmailDetails/<str:userEmail>/', UserEmailDetails.as_view()),
     path('cliqueDetails/<str:name>/', CliqueDetails.as_view()),
     path('cliqueMembers/<str:name>/', CliqueMembers.as_view()),    
