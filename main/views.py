@@ -575,18 +575,38 @@ class UserAnnouncements(APIView):
         except Announcement.DoesNotExist:
             return False
 
+    def get_object_byid(self, id):
+        try:
+            return Team.objects.get(id=id)
+        except Team.DoesNotExist:
+            return False
+
     def get(self, request, username, format=None):
         userQuerySet = User.objects.values('id', 'username')
+        teamQuerySet = Team.objects.values('members', 'managers', 'owners', 'id')
+        teams = []
         userid=None
         for user in userQuerySet:
             if user['username']==username:
                 userid=user['id']
-        if userid:
-            announcementQuerySet=Announcement.objects.values('id', 'creator')
+        if userid != None:
+            for team in teamQuerySet:
+                members = team['members']
+                managers = team['managers']
+                owners = team['owners']
+                if userid == members or userid == managers or userid == owners:
+                    teams.append(team['id'])
+
+            announcementQuerySet=Announcement.objects.values('id', 'creator', 'team')
             announcements=[]
             for announcement in announcementQuerySet:
                 if announcement["creator"]==userid:
                     announcements.append(AnnouncementSerializer(self.get_object(announcement['id'])).data)
+                if teams:
+                    for team in teams:
+                        if announcement['team']==team:
+                            announcements.append(AnnouncementSerializer(self.get_object(announcement['id'])).data)
+
             return Response(announcements, status=status.HTTP_200_OK)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
