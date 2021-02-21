@@ -80,27 +80,21 @@ class UserTeams(APIView):
         except Team.DoesNotExist:
             return False
 
-    def get(self, request, username, format=None):
-        userQuerySet = User.objects.values('username', 'id')
+    def get(self, request, userid, format=None):
         teamQuerySet = Team.objects.values('members', 'managers', 'owners', 'id')
         teams = []
-        userId = ''
-        for user in userQuerySet:
-            if user['username'] == username:
-                userId = user['id']
 
-        if userId:
-            for team in teamQuerySet:
-                members = team['members']
-                managers = team['managers']
-                owners = team['owners']
-                if userId == members or userId == managers or userId == owners:
-                    teamObject = self.get_object_byid(team['id'])
-                    serializedTeam = TeamSerializer(teamObject).data
-                    if not serializedTeam in teams:
-                        teams.append(serializedTeam)
-                
-            return Response(teams, status=status.HTTP_200_OK)
+        for team in teamQuerySet:
+            members = team['members']
+            managers = team['managers']
+            owners = team['owners']
+            if userid == members or userid == managers or userid == owners:#is this right? or should it be userid in members etc...? 
+                teamObject = self.get_object_byid(team['id'])
+                serializedTeam = TeamSerializer(teamObject).data
+                if not serializedTeam in teams:
+                    teams.append(serializedTeam)
+            
+        return Response(teams, status=status.HTTP_200_OK)
 
         return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -119,42 +113,37 @@ class UserContacts(APIView):
         except User.DoesNotExist:
             return False
 
-    def get(self, request, username, format=None):
-        userQuerySet = User.objects.values('username', 'id')
+    def get(self, request, userid, format=None):
         teamQuerySet = Team.objects.values('members', 'managers', 'owners', 'id')
         seen = set()
         teams = set()
         contacts = []
-        userId = ''
-        for user in userQuerySet:
-            if user['username'] == username:
-                userId = user['id']
 
-        if userId:
-            for team in teamQuerySet:
+
+        for team in teamQuerySet:
+            members = team['members']
+            managers = team['managers']
+            owners = team['owners']
+            if userid == members or userid == managers or userid == owners:#is this right? or should it be userid in members etc...? 
+                teams.add(team['id'])
+
+        newTeamQuerySet = Team.objects.values('members', 'managers', 'owners', 'id')
+        
+        for team in newTeamQuerySet:
+            if team['id'] in teams:
                 members = team['members']
                 managers = team['managers']
                 owners = team['owners']
-                if userId == members or userId == managers or userId == owners:
-                    teams.add(team['id'])
-
-            newTeamQuerySet = Team.objects.values('members', 'managers', 'owners', 'id')
-            
-            for team in newTeamQuerySet:
-                if team['id'] in teams:
-                    members = team['members']
-                    managers = team['managers']
-                    owners = team['owners']
-                    for user in [members, managers, owners]:
-                        if user != userId:
-                            contact = self.get_user_object_byid(user)
-                            if contact:
-                                if not user in seen:
-                                    serializedContact = UserSerializer(contact).data
-                                    contacts.append(serializedContact)
-                                    seen.add(user)
+                for user in [members, managers, owners]:
+                    if user != userid:
+                        contact = self.get_user_object_byid(user)
+                        if contact:
+                            if not user in seen:
+                                serializedContact = UserSerializer(contact).data
+                                contacts.append(serializedContact)
+                                seen.add(user)
                 
-            return Response(list(contacts), status=status.HTTP_200_OK)
+        return Response(list(contacts), status=status.HTTP_200_OK)
         return Response(status=status.HTTP_404_NOT_FOUND)
 
 class UserSchedule(APIView):
@@ -164,20 +153,14 @@ class UserSchedule(APIView):
         except User.DoesNotExist:
             return False
 
-    def get(self, request, username):
-        userQuerySet = User.objects.values('username', 'id')
+    def get(self, request, userid):
         scheduleQuerySet = Schedule.objects.values('user')
 
-        userId = ''
-        for user in userQuerySet:
-            if user['username'] == username:
-                userId = user['id']
-        if userId:
-            for schedule in scheduleQuerySet:
-                if schedule['user'] == userId:
-                    scheduleObject = self.getScheduleObject(userId)
-                    serializedSchedule = ScheduleSerializer(scheduleObject).data
-                    return Response(serializedSchedule, status=status.HTTP_200_OK)
+        for schedule in scheduleQuerySet:
+            if schedule['user'] == userid:
+                scheduleObject = self.getScheduleObject(userid)
+                serializedSchedule = ScheduleSerializer(scheduleObject).data
+                return Response(serializedSchedule, status=status.HTTP_200_OK)
         return Response(status=status.HTTP_404_NOT_FOUND)
 
 class TeamDetails(APIView):
@@ -352,33 +335,28 @@ class UserEvents(APIView):
         except Team.DoesNotExist:
             return False
 
-    def get(self, request, username, format=None):
-        userQuerySet = User.objects.values('id', 'username')
+    def get(self, request, userid, format=None):
         teamQuerySet = Team.objects.values('members', 'managers', 'owners', 'id')
         teams = []
-        userid=None
-        for user in userQuerySet:
-            if user['username']==username:
-                userid=user['id']
-        if userid != None:
-            for team in teamQuerySet:
-                members = team['members']
-                managers = team['managers']
-                owners = team['owners']
-                if userid == members or userid == managers or userid == owners:
-                    teams.append(team['id'])
 
-            eventQuerySet=Event.objects.values('id', 'user', 'team')
-            events=[]
-            for event in eventQuerySet:
-                if event["user"]==userid:
-                    events.append(EventSerializer(self.get_object(event['id'])).data)
-                if teams:
-                    for team in teams:
-                        if event['team']==team:
-                            events.append(EventSerializer(self.get_object(event['id'])).data)
+        for team in teamQuerySet:
+            members = team['members']
+            managers = team['managers']
+            owners = team['owners']
+            if userid == members or userid == managers or userid == owners:
+                teams.append(team['id'])
 
-            return Response(events, status=status.HTTP_200_OK)
+        eventQuerySet=Event.objects.values('id', 'user', 'team')
+        events=[]
+        for event in eventQuerySet:
+            if event["user"]==userid:
+                events.append(EventSerializer(self.get_object(event['id'])).data)
+            if teams:
+                for team in teams:
+                    if event['team']==team:
+                        events.append(EventSerializer(self.get_object(event['id'])).data)
+
+        return Response(events, status=status.HTTP_200_OK)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -581,33 +559,28 @@ class UserAnnouncements(APIView):
         except Team.DoesNotExist:
             return False
 
-    def get(self, request, username, format=None):
-        userQuerySet = User.objects.values('id', 'username')
+    def get(self, request, userid, format=None):
         teamQuerySet = Team.objects.values('members', 'managers', 'owners', 'id')
         teams = []
-        userid=None
-        for user in userQuerySet:
-            if user['username']==username:
-                userid=user['id']
-        if userid != None:
-            for team in teamQuerySet:
-                members = team['members']
-                managers = team['managers']
-                owners = team['owners']
-                if userid == members or userid == managers or userid == owners:
-                    teams.append(team['id'])
 
-            announcementQuerySet=Announcement.objects.values('id', 'creator', 'team')
-            announcements=[]
-            for announcement in announcementQuerySet:
-                if announcement["creator"]==userid:
-                    announcements.append(AnnouncementSerializer(self.get_object(announcement['id'])).data)
-                if teams:
-                    for team in teams:
-                        if announcement['team']==team:
-                            announcements.append(AnnouncementSerializer(self.get_object(announcement['id'])).data)
+        for team in teamQuerySet:
+            members = team['members']
+            managers = team['managers']
+            owners = team['owners']
+            if userid == members or userid == managers or userid == owners:
+                teams.append(team['id'])
 
-            return Response(announcements, status=status.HTTP_200_OK)
+        announcementQuerySet=Announcement.objects.values('id', 'creator', 'team')
+        announcements=[]
+        for announcement in announcementQuerySet:
+            if announcement["creator"]==userid:
+                announcements.append(AnnouncementSerializer(self.get_object(announcement['id'])).data)
+            if teams:
+                for team in teams:
+                    if announcement['team']==team:
+                        announcements.append(AnnouncementSerializer(self.get_object(announcement['id'])).data)
+
+        return Response(announcements, status=status.HTTP_200_OK)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
 

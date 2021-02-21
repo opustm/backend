@@ -5,19 +5,18 @@ urlpatterns = [
     path('', index),
     path('currentUser/', current_user),
     path('register/', UserList.as_view()),
-    path('users/<str:username>/', UserDetails.as_view()),
-    path('users/<str:username>/teams/',UserTeams.as_view()),
-    path('users/<str:username>/contacts/',UserContacts.as_view()),
-    path('users/<str:username>/schedule/',UserSchedule.as_view()),
+    path('users/<str:userid>/teams/',UserTeams.as_view()),
+    path('users/<str:userid>/contacts/',UserContacts.as_view()),
+    path('users/<str:userid>/schedule/',UserSchedule.as_view()),
 
     path('teams/<str:name>/', TeamDetails.as_view()),
     path('teams/<str:name>/members/', TeamMembers.as_view()),
   
     path('announcements/team/<str:name>/', TeamAnnouncements.as_view()),  
-    path('announcements/user/<str:username>/', UserAnnouncements.as_view()),  
+    path('announcements/user/<str:userid>/', UserAnnouncements.as_view()),  
 
     path('events/team/<str:name>/', TeamEvents.as_view()),
-    path('events/user/<str:username>/', UserEvents.as_view()),
+    path('events/user/<str:userid>/', UserEvents.as_view()),
 
     path('requests/team/<str:name>/', TeamRequests.as_view()),
     path('requests/user/<str:userame>/', UserRequests.as_view()),
