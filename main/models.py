@@ -59,6 +59,7 @@ class Team(AbstractGroup):
     members = models.ManyToManyField(User, related_name='teamMembers', default=[], blank=True)
     managers = models.ManyToManyField(User, related_name='teamManagers', default=[], blank=True)
     owners = models.ManyToManyField(User, related_name='teamOwners', default=[], blank=True)
+    description = models.CharField(max_length=100, default="this is an opus team")
 
     class Meta:
         verbose_name = _('team')
