@@ -9,16 +9,15 @@ urlpatterns = [
     path('users/<str:userid>/contacts/',UserContacts.as_view()),
     path('users/<str:userid>/schedule/',UserSchedule.as_view()),
 
-    path('teams/<str:name>/', TeamDetails.as_view()),
-    path('teams/<str:name>/members/', TeamMembers.as_view()),
+    path('teams/<str:teamid>/members/', TeamMembers.as_view()),
   
-    path('announcements/team/<str:name>/', TeamAnnouncements.as_view()),  
+    path('announcements/team/<str:teamid>/', TeamAnnouncements.as_view()),  
     path('announcements/user/<str:userid>/', UserAnnouncements.as_view()),  
 
-    path('events/team/<str:name>/', TeamEvents.as_view()),
+    path('events/team/<str:teamid>/', TeamEvents.as_view()),
     path('events/user/<str:userid>/', UserEvents.as_view()),
 
-    path('requests/team/<str:name>/', TeamRequests.as_view()),
+    path('requests/team/<str:teamid>/', TeamRequests.as_view()),
     path('requests/user/<str:userame>/', UserRequests.as_view()),
 
     # path('userInvitations/<str:username>/', UserInvitations.as_view()),

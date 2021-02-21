@@ -202,18 +202,17 @@ class TeamMembers(APIView):
         except User.DoesNotExist:
             return False
 
-    def get(self, request, name, format=None):
-        teamQuerySet = Team.objects.values('name', 'members', 'managers', 'owners')
+    def get(self, request, teamid, format=None):
+        teamQuerySet = Team.objects.values('id', 'members', 'managers', 'owners')
         members={}
         for team in teamQuerySet:
-            if team['name']==name:
+            if team['id']==int(teamid):
                 for level in ['members', 'managers', 'owners']:
-                    print(team[level])
                     if not team[level] is None:
-                        print(team[level])
                         users=[]
                         if isinstance(team[level], list):
                             for user in team[level]:
+                                print(user)
                                 users.append(UserSerializer(self.get_object(user)).data)
                         else:
                             users.append(UserSerializer(self.get_object(team[level])).data)
@@ -221,25 +220,6 @@ class TeamMembers(APIView):
                     else:
                         members[level]=[]
 
-        if members:
-            return Response(members, status=status.HTTP_200_OK)
-        else:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-
-class TeamIdMembers(APIView):
-    permission_classes = (permissions.AllowAny,)
-
-    def get_object(self, id):
-        try:
-            return User.objects.get(id=id)
-        except User.DoesNotExist:
-            return False
-    def get(self, request, id, format=None):
-        userQuerySet=User.objects.values('id', 'teams')
-        members=[]
-        for user in userQuerySet:
-            if user["teams"]==id:
-                members.append(UserSerializer(self.get_object(user['id'])).data)
         if members:
             return Response(members, status=status.HTTP_200_OK)
         else:
@@ -253,11 +233,11 @@ class RelatedTeams(APIView):
             return Team.objects.get(id=id)
         except Team.DoesNotExist:
             return False
-    def get(self, request, name, format=None):
-        teamQuerySet = Team.objects.values('relatedTeams', 'name')
+    def get(self, request, teamid, format=None):
+        teamQuerySet = Team.objects.values('relatedTeams', 'id')
         related=[]
         for team in teamQuerySet:
-            if team['name']==name:
+            if team['id']==teamid:
                 related.append(team['relatedTeams'])
         if related:
             members=[]
@@ -305,21 +285,14 @@ class TeamEvents(APIView):
         except Event.DoesNotExist:
             return False
 
-    def get(self, request, name, format=None):
-        teamQuerySet = Team.objects.values('id', 'name')
-        teamid=None
-        for team in teamQuerySet:
-            if team['name']==name:
-                teamid=team['id']
-        if teamid:
-            eventQuerySet=Event.objects.values('id', 'team')
-            events=[]
-            for event in eventQuerySet:
-                if event["team"]==teamid:
-                    events.append(EventSerializer(self.get_object(event['id'])).data)
-            return Response(events, status=status.HTTP_200_OK)
-        else:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+    def get(self, request, teamid, format=None):
+        eventQuerySet=Event.objects.values('id', 'team')
+        events=[]
+        for event in eventQuerySet:
+            if event["team"]==int(teamid):
+                events.append(EventSerializer(self.get_object(event['id'])).data)
+        return Response(events, status=status.HTTP_200_OK)
+
 
 class UserEvents(APIView):
     permission_classes = (permissions.AllowAny,)
@@ -359,8 +332,6 @@ class UserEvents(APIView):
 
         return Response(events, status=status.HTTP_200_OK)
 
-        # return Response(status=status.HTTP_404_NOT_FOUND)
-
 class UserInvitations(APIView):
     permission_classes = (permissions.AllowAny,)
 
@@ -395,21 +366,15 @@ class TeamRequests(APIView):
         except Request.DoesNotExist:
             return False
 
-    def get(self, request, name, format=None):
-        teamQuerySet = Team.objects.values('id', 'name')
-        teamid=None
-        for team in teamQuerySet:
-            if team['name']==name:
-                teamid=team['id']
-        if teamid:
-            requestQuerySet=Request.objects.values('id', 'team')
-            requests=[]
-            for request in requestQuerySet:
-                if request["team"]==teamid:
-                    requests.append(RequestSerializer(self.get_object(request['id'])).data)
-            return Response(requests, status=status.HTTP_200_OK)
-        else:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+    def get(self, request, teamid, format=None):
+
+        requestQuerySet=Request.objects.values('id', 'team')
+        requests=[]
+        for request in requestQuerySet:
+            if request["team"]==int(teamid):
+                requests.append(RequestSerializer(self.get_object(request['id'])).data)
+        return Response(requests, status=status.HTTP_200_OK)
+
 
 class UserRequests(APIView):
     permission_classes = (permissions.AllowAny,)
@@ -529,21 +494,14 @@ class TeamAnnouncements(APIView):
         except Announcement.DoesNotExist:
             return False
 
-    def get(self, request, name, format=None):
-        teamQuerySet = Team.objects.values('id', 'name')
-        teamid=None
-        for team in teamQuerySet:
-            if team['name']==name:
-                teamid=team['id']
-        if teamid:
-            announcementQuerySet=Announcement.objects.values('id', 'team')
-            announcements=[]
-            for announcement in announcementQuerySet:
-                if announcement["team"]==teamid:
-                    announcements.append(AnnouncementSerializer(self.get_object(announcement['id'])).data)
-            return Response(announcements, status=status.HTTP_200_OK)
-        else:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+    def get(self, request, teamid, format=None):
+        announcementQuerySet=Announcement.objects.values('id', 'team')
+        announcements=[]
+        for announcement in announcementQuerySet:
+            if announcement["team"]==int(teamid):
+                announcements.append(AnnouncementSerializer(self.get_object(announcement['id'])).data)
+        return Response(announcements, status=status.HTTP_200_OK)
+
 
 class UserAnnouncements(APIView):
     permission_classes = (permissions.AllowAny,)

@@ -52,7 +52,7 @@ class InvitationSerializer(serializers.ModelSerializer):
         return data
 
     def get_team(self, obj):
-        data = TeamSerializer(obj.team).data['name']
+        data = TeamSerializer(obj.team).data
         return data
 
 class AnnouncementSerializer(serializers.ModelSerializer):
@@ -76,7 +76,7 @@ class AnnouncementSerializer(serializers.ModelSerializer):
         return lst
 
     def get_team(self, obj):
-        data = TeamSerializer(obj.team).data['name']
+        data = TeamSerializer(obj.team).data
         return data
 
 class EventSerializer(serializers.ModelSerializer):
@@ -108,7 +108,7 @@ class EventSerializer(serializers.ModelSerializer):
         return lst
 
     def get_team(self, obj):
-        data = TeamSerializer(obj.team).data['name']
+        data = TeamSerializer(obj.team).data
         return data
 
 
@@ -146,7 +146,7 @@ class RequestSerializer(serializers.ModelSerializer):
         return data
 
     def get_team(self, obj):
-        data = TeamSerializer(obj.team).data['name']
+        data = TeamSerializer(obj.team).data
         return data
 
 class UserSerializerWithToken(serializers.ModelSerializer):
