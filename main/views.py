@@ -1,15 +1,10 @@
-
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.middleware.csrf import get_token
-from django.http import Http404
 
 from rest_framework import permissions, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework import viewsets
-import json
-import uuid
 
 from .models import *
 from .serializers import *
@@ -84,18 +79,17 @@ class UserTeams(APIView):
     def get(self, request, userid, format=None):
         teamQuerySet = Team.objects.values('members', 'managers', 'owners', 'id')
         teams = []
-
         for team in teamQuerySet:
-            members = team['members']
-            managers = team['managers']
-            owners = team['owners']
-            if userid == members or userid == managers or userid == owners:#is this right? or should it be userid in members etc...? 
+            memberString = str(team['members'])
+            managerString = str(team['managers'])
+            ownerString = str(team['owners'])
+            if userid == memberString or userid == managerString or userid == ownerString:
                 teamObject = self.get_object_byid(team['id'])
                 serializedTeam = TeamSerializer(teamObject).data
                 if not serializedTeam in teams:
                     teams.append(serializedTeam)
             
-        return Response(teams, status=status.HTTP_200_OK)
+            return Response(teams, status=status.HTTP_200_OK)
 
         return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -122,10 +116,10 @@ class UserContacts(APIView):
 
 
         for team in teamQuerySet:
-            members = team['members']
-            managers = team['managers']
-            owners = team['owners']
-            if userid == members or userid == managers or userid == owners:#is this right? or should it be userid in members etc...? 
+            memberString = str(team['members'])
+            managerString = str(team['managers'])
+            ownerString = str(team['owners'])
+            if userid == memberString or userid == managerString or userid == ownerString:
                 teams.add(team['id'])
 
         newTeamQuerySet = Team.objects.values('members', 'managers', 'owners', 'id')
@@ -136,7 +130,7 @@ class UserContacts(APIView):
                 managers = team['managers']
                 owners = team['owners']
                 for user in [members, managers, owners]:
-                    if user != userid:
+                    if str(user) != userid:
                         contact = self.get_user_object_byid(user)
                         if contact:
                             if not user in seen:
@@ -144,7 +138,7 @@ class UserContacts(APIView):
                                 contacts.append(serializedContact)
                                 seen.add(user)
                 
-        return Response(list(contacts), status=status.HTTP_200_OK)
+            return Response(list(contacts), status=status.HTTP_200_OK)
         return Response(status=status.HTTP_404_NOT_FOUND)
 
 class UserSchedule(APIView):
@@ -212,7 +206,6 @@ class TeamMembers(APIView):
                         users=[]
                         if isinstance(team[level], list):
                             for user in team[level]:
-                                print(user)
                                 users.append(UserSerializer(self.get_object(user)).data)
                         else:
                             users.append(UserSerializer(self.get_object(team[level])).data)
@@ -314,23 +307,23 @@ class UserEvents(APIView):
         teams = []
 
         for team in teamQuerySet:
-            members = team['members']
-            managers = team['managers']
-            owners = team['owners']
-            if userid == members or userid == managers or userid == owners:
+            memberString = str(team['members'])
+            managerString = str(team['managers'])
+            ownerString = str(team['owners'])
+            if userid == memberString or userid == managerString or userid == ownerString:
                 teams.append(team['id'])
 
-        eventQuerySet=Event.objects.values('id', 'user', 'team')
-        events=[]
-        for event in eventQuerySet:
-            if event["user"].hex==userid.replace("-", ""):
-                events.append(EventSerializer(self.get_object(event['id'])).data)
-            if teams:
-                for team in teams:
-                    if event['team']==team:
-                        events.append(EventSerializer(self.get_object(event['id'])).data)
+        if teams:
+            eventQuerySet = Event.objects.values('id', 'user', 'team')
+            events = []
+            for event in eventQuerySet:
+                if event["user"].hex == userid.replace("-", ""):
+                    events.append(EventSerializer(self.get_object(event['id'])).data)
+                if event["team"] in teams:
+                    events.append(EventSerializer(self.get_object(event['id'])).data)
 
-        return Response(events, status=status.HTTP_200_OK)
+            return Response(events, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
 class UserInvitations(APIView):
     permission_classes = (permissions.AllowAny,)
@@ -431,8 +424,6 @@ class InvitationDetails(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-
-
 class UserSchedules(APIView):
     permission_classes = (permissions.AllowAny,)
 
@@ -523,25 +514,22 @@ class UserAnnouncements(APIView):
         teams = []
 
         for team in teamQuerySet:
-            members = team['members']
-            managers = team['managers']
-            owners = team['owners']
-            if userid == members or userid == managers or userid == owners:
+            memberString = str(team['members'])
+            managerString = str(team['managers'])
+            ownerString = str(team['owners'])
+            if userid == memberString or userid == managerString or userid == ownerString:
                 teams.append(team['id'])
 
-        announcementQuerySet=Announcement.objects.values('id', 'creator', 'team')
-        announcements=[]
-        for announcement in announcementQuerySet:
-            if announcement["creator"].hex==userid.replace("-", ""):
-                announcements.append(AnnouncementSerializer(self.get_object(announcement['id'])).data)
-            if teams:
-                for team in teams:
-                    if announcement['team']==team:
-                        announcements.append(AnnouncementSerializer(self.get_object(announcement['id'])).data)
+        if teams:
+            announcementQuerySet = Announcement.objects.values('id', 'creator', 'team')
+            announcements = []
+            for announcement in announcementQuerySet:
+                if announcement['team'] in teams:
+                    announcements.append(AnnouncementSerializer(self.get_object(announcement['id'])).data)
 
-        return Response(announcements, status=status.HTTP_200_OK)
+            return Response(announcements, status=status.HTTP_200_OK)
 
-        # return Response(status=status.HTTP_404_NOT_FOUND)
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
 # class TeamTeamMessages(APIView):
 #     permission_classes = (permissions.AllowAny,)
