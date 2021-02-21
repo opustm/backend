@@ -5,6 +5,7 @@ urlpatterns = [
     path('', index),
     path('currentUser/', current_user),
     path('register/', UserList.as_view()),
+    
     path('users/<str:userid>/teams/',UserTeams.as_view()),
     path('users/<str:userid>/contacts/',UserContacts.as_view()),
     path('users/<str:userid>/schedule/',UserSchedule.as_view()),
