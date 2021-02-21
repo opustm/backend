@@ -9,6 +9,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import viewsets
 import json
+import uuid
 
 from .models import *
 from .serializers import *
@@ -349,7 +350,7 @@ class UserEvents(APIView):
         eventQuerySet=Event.objects.values('id', 'user', 'team')
         events=[]
         for event in eventQuerySet:
-            if event["user"]==userid:
+            if event["user"].hex==userid.replace("-", ""):
                 events.append(EventSerializer(self.get_object(event['id'])).data)
             if teams:
                 for team in teams:
@@ -357,8 +358,8 @@ class UserEvents(APIView):
                         events.append(EventSerializer(self.get_object(event['id'])).data)
 
         return Response(events, status=status.HTTP_200_OK)
-        else:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        # return Response(status=status.HTTP_404_NOT_FOUND)
 
 class UserInvitations(APIView):
     permission_classes = (permissions.AllowAny,)
@@ -379,7 +380,7 @@ class UserInvitations(APIView):
             invitationQuerySet=Invitation.objects.values('id', 'invitee')
             invitations=[]
             for invitation in invitationQuerySet:
-                if invitation["invitee"]==userid:
+                if invitation["invitee"].hex==userid.replace("-", ""):
                     invitations.append(InvitationSerializer(self.get_object(invitation['id'])).data)
             return Response(invitations, status=status.HTTP_200_OK)
         else:
@@ -429,7 +430,7 @@ class UserRequests(APIView):
             requestQuerySet=Request.objects.values('id', 'user')
             requests=[]
             for request in requestQuerySet:
-                if request["user"]==userid:
+                if request["user"].hex==userid.replace("-", ""):
                     requests.append(RequestSerializer(self.get_object(request['id'])).data)
             return Response(requests, status=status.HTTP_200_OK)
         else:
@@ -486,7 +487,7 @@ class UserSchedules(APIView):
             scheduleQuerySet = Schedule.objects.values('user', 'id')
             idsOfUsersSchedules=[]
             for schedule in scheduleQuerySet:
-                if schedule['user']==userid:
+                if schedule['user'].hex==userid.replace("-", ""):
                     idsOfUsersSchedules.append(schedule['id'])
             if idsOfUsersSchedules:
                 schedules=[]
@@ -573,7 +574,7 @@ class UserAnnouncements(APIView):
         announcementQuerySet=Announcement.objects.values('id', 'creator', 'team')
         announcements=[]
         for announcement in announcementQuerySet:
-            if announcement["creator"]==userid:
+            if announcement["creator"].hex==userid.replace("-", ""):
                 announcements.append(AnnouncementSerializer(self.get_object(announcement['id'])).data)
             if teams:
                 for team in teams:
@@ -581,8 +582,8 @@ class UserAnnouncements(APIView):
                         announcements.append(AnnouncementSerializer(self.get_object(announcement['id'])).data)
 
         return Response(announcements, status=status.HTTP_200_OK)
-        else:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        # return Response(status=status.HTTP_404_NOT_FOUND)
 
 # class TeamTeamMessages(APIView):
 #     permission_classes = (permissions.AllowAny,)
@@ -628,7 +629,7 @@ class UserAnnouncements(APIView):
 #             directMessageQuerySet = DirectMessage.objects.values('sender', 'id')
 #             idsOfUsersDirectMessages=[]
 #             for directMessage in directMessageQuerySet:
-#                 if directMessage['sender']==userid:
+#                 if directMessage['sender'].hex==userid.replace("-", ""):
 #                     idsOfUsersDirectMessages.append(directMessage['id'])
 #             if idsOfUsersDirectMessages:
 #                 directMessages=[]
@@ -657,7 +658,7 @@ class UserAnnouncements(APIView):
 #             directMessageQuerySet = DirectMessage.objects.values('recipient', 'id')
 #             idsOfUsersDirectMessages=[]
 #             for directMessage in directMessageQuerySet:
-#                 if directMessage['recipient']==userid:
+#                 if directMessage['recipient'].hex==userid.replace("-", ""):
 #                     idsOfUsersDirectMessages.append(directMessage['id'])
 #             if idsOfUsersDirectMessages:
 #                 directMessages=[]

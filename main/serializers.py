@@ -4,7 +4,7 @@ from .models import *
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name', 'email', 'bio', 'picture', 'theme', 'phone')
+        fields = ('id', 'username', 'first_name', 'last_name', 'email', 'bio', 'picture', 'theme', 'phone')
 
 class TeamSerializer(serializers.ModelSerializer):
     members = serializers.SerializerMethodField()
@@ -18,21 +18,21 @@ class TeamSerializer(serializers.ModelSerializer):
         data = UserSerializer(obj.members, many=True).data
         lst=[]
         for u in data:
-            lst.append(u['username'])
+            lst.append(u)
         return lst
 
     def get_managers(self, obj):
         data = UserSerializer(obj.managers, many=True).data
         lst=[]
         for u in data:
-            lst.append(u['username'])
+            lst.append(u)
         return lst
 
     def get_owners(self, obj):
         data = UserSerializer(obj.owners, many=True).data
         lst=[]
         for u in data:
-            lst.append(u['username'])
+            lst.append(u)
         return lst
 
 class InvitationSerializer(serializers.ModelSerializer):
@@ -44,11 +44,11 @@ class InvitationSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def get_invitee(self, obj):
-        data = UserSerializer(obj.invitee).data['username']
+        data = UserSerializer(obj.invitee).data
         return data
 
     def get_inviter(self, obj):
-        data = UserSerializer(obj.inviter).data['username']
+        data = UserSerializer(obj.inviter).data
         return data
 
     def get_team(self, obj):
@@ -65,14 +65,14 @@ class AnnouncementSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def get_creator(self, obj):
-        data = UserSerializer(obj.creator).data['username']
+        data = UserSerializer(obj.creator).data
         return data
 
     def get_acknowledged(self, obj):
         data = UserSerializer(obj.acknowledged, many=True).data
         lst=[]
         for u in data:
-            lst.append(u['username'])
+            lst.append(u)
         return lst
 
     def get_team(self, obj):
@@ -90,21 +90,21 @@ class EventSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def get_user(self, obj):
-        data = UserSerializer(obj.user).data['username']
+        data = UserSerializer(obj.user).data
         return data
 
     def get_invited(self, obj):
         data = UserSerializer(obj.invited, many=True).data
         lst=[]
         for u in data:
-            lst.append(u['username'])
+            lst.append(u)
         return lst
 
     def get_notGoing(self, obj):
         data = UserSerializer(obj.notGoing, many=True).data
         lst=[]
         for u in data:
-            lst.append(u['username'])
+            lst.append(u)
         return lst
 
     def get_team(self, obj):
@@ -125,7 +125,7 @@ class ScheduleSerializer(serializers.ModelSerializer):
         return data
 
     def get_user(self, obj):
-        data = UserSerializer(obj.user).data['username']
+        data = UserSerializer(obj.user).data
         return data
 
 class TimeFrameSerializer(serializers.ModelSerializer):
@@ -142,7 +142,7 @@ class RequestSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def get_user(self, obj):
-        data = UserSerializer(obj.user).data['username']
+        data = UserSerializer(obj.user).data
         return data
 
     def get_team(self, obj):
