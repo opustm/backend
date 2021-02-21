@@ -73,16 +73,6 @@ class Request(models.Model):
     message = models.CharField(max_length=100, default='Please let me join our group.')
     dateRequested = models.DateTimeField()
 
-class Invitation(models.Model):#will need to delete each row once invitee_email joins team
-    team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='teamInvitation')
-    invitee = models.ForeignKey(User, on_delete=models.CASCADE, related_name='invitee', blank=True)
-    inviter = models.ForeignKey(User, on_delete=models.CASCADE, related_name='inviter', blank=True)
-    message = models.CharField(max_length=100, default='Please join our group.')
-    inviteeEmail=models.CharField(max_length=100, default='asdf@example.com')
-    dateInvited=models.DateTimeField()
-    
-    def __str__(self):
-        return f'{self.inviteeEmail} invited to {self.team} by {self.inviter}'
         
 class Event(models.Model):
     team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='teamEvent', blank=True, null=True)#ONE TEAM CAN HAVE MANY EVENTS (ONE2M)
@@ -120,6 +110,17 @@ class TimeFrame(models.Model):
     end = models.TimeField()
     def __str__(self):
         return f'TimeFrame for {self.schedule} Available from {self.start} to {self.end} on {self.weekday}.'
+
+class Invitation(models.Model):#will need to delete each row once invitee_email joins team
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='teamInvitation')
+    invitee = models.ForeignKey(User, on_delete=models.CASCADE, related_name='invitee', blank=True)
+    inviter = models.ForeignKey(User, on_delete=models.CASCADE, related_name='inviter', blank=True)
+    message = models.CharField(max_length=100, default='Please join our group.')
+    inviteeEmail=models.CharField(max_length=100, default='asdf@example.com')
+    dateInvited=models.DateTimeField()
+    
+    def __str__(self):
+        return f'{self.inviteeEmail} invited to {self.team} by {self.inviter}'
 
 # class Reaction(models.Model):
 #     reactor = models.ForeignKey(User, on_delete=models.CASCADE, related_name='userReactor')
