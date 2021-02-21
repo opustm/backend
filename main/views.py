@@ -90,7 +90,6 @@ class UserTeams(APIView):
                     teams.append(serializedTeam)
             
             return Response(teams, status=status.HTTP_200_OK)
-
         return Response(status=status.HTTP_404_NOT_FOUND)
 
 class UserContacts(APIView):
@@ -198,7 +197,7 @@ class TeamMembers(APIView):
 
     def get(self, request, teamid, format=None):
         teamQuerySet = Team.objects.values('id', 'members', 'managers', 'owners')
-        members={}
+        members = {}
         for team in teamQuerySet:
             if team['id']==int(teamid):
                 for level in ['members', 'managers', 'owners']:
@@ -215,8 +214,7 @@ class TeamMembers(APIView):
 
         if members:
             return Response(members, status=status.HTTP_200_OK)
-        else:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
 class RelatedTeams(APIView):
     permission_classes = (permissions.AllowAny,)
@@ -237,8 +235,7 @@ class RelatedTeams(APIView):
             for teamid in related:
                 members.append(TeamSerializer(self.get_object_byid(teamid)).data)
             return Response(members, status=status.HTTP_200_OK)
-        else:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
 class ManyRelatedTeams(APIView):
     permission_classes = (permissions.AllowAny,)
@@ -266,8 +263,7 @@ class ManyRelatedTeams(APIView):
                 allTeamsRelatedTeams[name]="404_NOT_FOUND"
         if allTeamsRelatedTeams:
             return Response(allTeamsRelatedTeams, status=status.HTTP_200_OK)
-        else:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
 class TeamEvents(APIView):
     permission_classes = (permissions.AllowAny,)
@@ -347,8 +343,7 @@ class UserInvitations(APIView):
                 if invitation["invitee"].hex==userid.replace("-", ""):
                     invitations.append(InvitationSerializer(self.get_object(invitation['id'])).data)
             return Response(invitations, status=status.HTTP_200_OK)
-        else:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
 class TeamRequests(APIView):
     permission_classes = (permissions.AllowAny,)
@@ -391,8 +386,7 @@ class UserRequests(APIView):
                 if request["user"].hex==userid.replace("-", ""):
                     requests.append(RequestSerializer(self.get_object(request['id'])).data)
             return Response(requests, status=status.HTTP_200_OK)
-        else:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
 class InvitationDetails(APIView):
     permission_classes = (permissions.AllowAny,)
