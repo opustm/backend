@@ -346,18 +346,38 @@ class UserEvents(APIView):
         except Event.DoesNotExist:
             return False
 
+    def get_object_byid(self, id):
+        try:
+            return Team.objects.get(id=id)
+        except Team.DoesNotExist:
+            return False
+
     def get(self, request, username, format=None):
         userQuerySet = User.objects.values('id', 'username')
+        teamQuerySet = Team.objects.values('members', 'managers', 'owners', 'id')
+        teams = []
         userid=None
         for user in userQuerySet:
             if user['username']==username:
                 userid=user['id']
-        if userid:
-            eventQuerySet=Event.objects.values('id', 'user')
+        if userid != None:
+            for team in teamQuerySet:
+                members = team['members']
+                managers = team['managers']
+                owners = team['owners']
+                if userid == members or userid == managers or userid == owners:
+                    teams.append(team['id'])
+
+            eventQuerySet=Event.objects.values('id', 'user', 'team')
             events=[]
             for event in eventQuerySet:
                 if event["user"]==userid:
                     events.append(EventSerializer(self.get_object(event['id'])).data)
+                if teams:
+                    for team in teams:
+                        if event['team']==team:
+                            events.append(EventSerializer(self.get_object(event['id'])).data)
+
             return Response(events, status=status.HTTP_200_OK)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)

@@ -28,7 +28,6 @@ def documentation(request):
                 <li><a href="/teams/test/">/teams/{teamName}/</a></li>
                 <li><a href="/teams/test/members">/teams/{teamName}/members/</a></li>
             </ul>
-            <h3>Invitation</h3>
             <h3>Request</h3>
             <ul>
                 <li><a href="/requests/">/requests/</a></li>
