@@ -3,10 +3,10 @@ from . import models
 from . import serializers
 from rest_framework import permissions, status
 
-class CliqueViewset(viewsets.ModelViewSet):
+class TeamViewset(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny,)
-    queryset= models.Clique.objects.all()
-    serializer_class = serializers.CliqueSerializer
+    queryset= models.Team.objects.all()
+    serializer_class = serializers.TeamSerializer
     
 class UserViewset(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny,)
@@ -38,25 +38,20 @@ class AnnouncementViewset(viewsets.ModelViewSet):
     queryset= models.Announcement.objects.all()
     serializer_class = serializers.AnnouncementSerializer
 
-class DirectMessageViewset(viewsets.ModelViewSet):
-    permission_classes = (permissions.AllowAny,)
-    queryset= models.DirectMessage.objects.all()
-    serializer_class = serializers.DirectMessageSerializer
+# class DirectMessageViewset(viewsets.ModelViewSet):
+#     permission_classes = (permissions.AllowAny,)
+#     queryset= models.DirectMessage.objects.all()
+#     serializer_class = serializers.DirectMessageSerializer
 
-class CliqueMessageViewset(viewsets.ModelViewSet):
-    permission_classes = (permissions.AllowAny,)
-    queryset= models.CliqueMessage.objects.all()
-    serializer_class = serializers.CliqueMessageSerializer
+# class TeamMessageViewset(viewsets.ModelViewSet):
+#     permission_classes = (permissions.AllowAny,)
+#     queryset= models.TeamMessage.objects.all()
+#     serializer_class = serializers.TeamMessageSerializer
 
-class ReactionViewset(viewsets.ModelViewSet):
-    permission_classes = (permissions.AllowAny,)
-    queryset= models.Reaction.objects.all()
-    serializer_class = serializers.ReactionSerializer
-
-class ToDoViewset(viewsets.ModelViewSet):
-    permission_classes = (permissions.AllowAny,)
-    queryset= models.ToDo.objects.all()
-    serializer_class = serializers.ToDoSerializer
+# class ReactionViewset(viewsets.ModelViewSet):
+#     permission_classes = (permissions.AllowAny,)
+#     queryset= models.Reaction.objects.all()
+#     serializer_class = serializers.ReactionSerializer
 
 class RequestViewset(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny,)
