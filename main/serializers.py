@@ -1,39 +1,54 @@
 from rest_framework import serializers
 from rest_framework_jwt.settings import api_settings
 from .models import *
+from collections import OrderedDict
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'first_name', 'last_name', 'email', 'bio', 'picture', 'theme', 'phone')
 
+class UserField(serializers.PrimaryKeyRelatedField):
+    def to_representation(self, value):
+        pk = super(UserField, self).to_representation(value)
+        try:
+            item = User.objects.get(pk=pk)
+            serializer = UserSerializer(item)
+            return serializer.data
+        except User.DoesNotExist:
+            return None
+
+    def get_choices(self, cutoff=None):
+        queryset = self.get_queryset()
+        if queryset is None:
+            return {}
+
+        return OrderedDict([(item.id, str(item)) for item in queryset])
+
 class TeamSerializer(serializers.ModelSerializer):
-    members = serializers.SerializerMethodField()
-    managers = serializers.SerializerMethodField()
-    owners = serializers.SerializerMethodField()
+    members = UserField(queryset=User.objects.all(), many=True)
+    managers = UserField(queryset=User.objects.all(), many=True)
+    owners = UserField(queryset=User.objects.all(), many=True)
+
     class Meta:
         model = Team
         fields = '__all__'
 
-    def get_members(self, obj):
-        data = UserSerializer(obj.members, many=True).data
-        lst=[]
-        for u in data:
-            lst.append(u)
-        return lst
+class TeamField(serializers.PrimaryKeyRelatedField):
+    def to_representation(self, value):
+        pk = super(TeamField, self).to_representation(value)
+        try:
+            item = Team.objects.get(pk=pk)
+            serializer = TeamSerializer(item)
+            return serializer.data
+        except Team.DoesNotExist:
+            return None
 
-    def get_managers(self, obj):
-        data = UserSerializer(obj.managers, many=True).data
-        lst=[]
-        for u in data:
-            lst.append(u)
-        return lst
-
-    def get_owners(self, obj):
-        data = UserSerializer(obj.owners, many=True).data
-        lst=[]
-        for u in data:
-            lst.append(u)
-        return lst
+    def get_choices(self, cutoff=None):
+        queryset = self.get_queryset()
+        if queryset is None:
+            return {}
+        return OrderedDict([(item.id, str(item)) for item in queryset]) 
 
 class InvitationSerializer(serializers.ModelSerializer):
     invitee = serializers.SerializerMethodField()
@@ -56,17 +71,12 @@ class InvitationSerializer(serializers.ModelSerializer):
         return data
 
 class AnnouncementSerializer(serializers.ModelSerializer):
-    creator = serializers.SerializerMethodField()
-    acknowledged = serializers.SerializerMethodField()
-    team = serializers.SerializerMethodField()
-    
+    team = TeamField(queryset=Team.objects.all())
+    creator = UserField(queryset=User.objects.all())
+
     class Meta:
         model = Announcement
         fields = '__all__'
-
-    def get_creator(self, obj):
-        data = UserSerializer(obj.creator).data
-        return data
 
     def get_acknowledged(self, obj):
         data = UserSerializer(obj.acknowledged, many=True).data
@@ -75,42 +85,13 @@ class AnnouncementSerializer(serializers.ModelSerializer):
             lst.append(u)
         return lst
 
-    def get_team(self, obj):
-        data = TeamSerializer(obj.team).data
-        return data
-
 class EventSerializer(serializers.ModelSerializer):
-    user = serializers.SerializerMethodField()
-    invited = serializers.SerializerMethodField()
-    notGoing = serializers.SerializerMethodField()
-    team = serializers.SerializerMethodField()
+    user = UserField(queryset=User.objects.all(), allow_null=True)
+    team = TeamField(queryset=Team.objects.all(), allow_null=True)
 
     class Meta:
         model = Event
         fields = '__all__'
-
-    def get_user(self, obj):
-        data = UserSerializer(obj.user).data
-        return data
-
-    def get_invited(self, obj):
-        data = UserSerializer(obj.invited, many=True).data
-        lst=[]
-        for u in data:
-            lst.append(u)
-        return lst
-
-    def get_notGoing(self, obj):
-        data = UserSerializer(obj.notGoing, many=True).data
-        lst=[]
-        for u in data:
-            lst.append(u)
-        return lst
-
-    def get_team(self, obj):
-        data = TeamSerializer(obj.team).data
-        return data
-
 
 class ScheduleSerializer(serializers.ModelSerializer):
     timeframes = serializers.SerializerMethodField()

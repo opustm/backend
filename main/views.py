@@ -89,8 +89,7 @@ class UserTeams(APIView):
                 if not serializedTeam in teams:
                     teams.append(serializedTeam)
             
-            return Response(teams, status=status.HTTP_200_OK)
-        return Response(status=status.HTTP_404_NOT_FOUND)
+        return Response(teams, status=status.HTTP_200_OK)
 
 class UserContacts(APIView):
     permission_classes = (permissions.AllowAny,)
@@ -313,10 +312,12 @@ class UserEvents(APIView):
             eventQuerySet = Event.objects.values('id', 'user', 'team')
             events = []
             for event in eventQuerySet:
-                if event["user"].hex == userid.replace("-", ""):
-                    events.append(EventSerializer(self.get_object(event['id'])).data)
-                if event["team"] in teams:
-                    events.append(EventSerializer(self.get_object(event['id'])).data)
+                if event["user"]:
+                    if event["user"].hex == userid.replace("-", ""):
+                        events.append(EventSerializer(self.get_object(event['id'])).data)
+                if event["team"]:
+                    if event["team"] in teams:
+                        events.append(EventSerializer(self.get_object(event['id'])).data)
 
             return Response(events, status=status.HTTP_200_OK)
         return Response(status=status.HTTP_404_NOT_FOUND)
