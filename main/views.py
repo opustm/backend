@@ -112,7 +112,6 @@ class UserContacts(APIView):
         teams = set()
         contacts = []
 
-
         for team in teamQuerySet:
             memberString = str(team['members'])
             managerString = str(team['managers'])
@@ -136,8 +135,7 @@ class UserContacts(APIView):
                                 contacts.append(serializedContact)
                                 seen.add(user)
                 
-            return Response(list(contacts), status=status.HTTP_200_OK)
-        return Response(status=status.HTTP_404_NOT_FOUND)
+        return Response(list(contacts), status=status.HTTP_200_OK)
 
 class UserSchedule(APIView):
     def getScheduleObject(self, id):
