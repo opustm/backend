@@ -9,7 +9,7 @@ class TestUserSetUp(APITestCase):
         self.fake = Faker()
         # For test cases not in urls.py use "/url/"
         self.register_url = "/users/"
-        self.register_url_alternate = "/users/register"
+        self.register_url_alternate = "/register"
         # self.user_by_username = reverse("user_by_username")
         # self.teams_by_usernamme = reverse("teams_by_username")
         # self.contacts_by_username = reverse("contacts_by_username")
