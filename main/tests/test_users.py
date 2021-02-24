@@ -7,12 +7,11 @@ class TestUserSetUp(APITestCase):
     """ Setup Declarations """
     def setUp(self):
         self.fake = Faker()
-        # For test cases not in urls.py use "/url/"
         self.register_url = "/users/"
         self.register_url_alternate = "/register"
-        # self.user_by_username = reverse("user_by_username")
-        # self.teams_by_usernamme = reverse("teams_by_username")
-        # self.contacts_by_username = reverse("contacts_by_username")
+        self.get_teams_by_userid = "get_teams_by_userid"
+        self.get_contacts_by_userid = "get_contacts_by_userid"
+        self.get_schedule_by_userid = "get_schedule_by_userid"
         self.user_data = {
             "username":self.fake.email().split("@")[0],
             "first_name":self.fake.name()[0],
