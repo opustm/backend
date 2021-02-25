@@ -76,12 +76,11 @@ class Request(models.Model):
         
 class Event(models.Model):
     team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='teamEvent', blank=True, null=True)#ONE TEAM CAN HAVE MANY EVENTS (ONE2M)
-    user = models.ForeignKey(User, default=1, on_delete=models.CASCADE, related_name='userEvent')#ONE USER CAN HAVE MANY EVENTS (ONE2M)
+    user = models.ForeignKey(User, default=1, on_delete=models.CASCADE, related_name='userEvent', blank=True, null=True)#ONE USER CAN HAVE MANY EVENTS (ONE2M)
     name = models.CharField(max_length=100, default='event')
     start = models.DateTimeField()
     end = models.DateTimeField()
     invited = models.ManyToManyField(User, related_name='eventInvited', blank=True)
-    notGoing = models.ManyToManyField(User, related_name='notGoing', blank=True)
     details = models.CharField(max_length=100, default='This event is blah blah blah..')
     picture = models.CharField(max_length=100, default='pic1')
     def __str__(self):
