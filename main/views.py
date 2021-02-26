@@ -194,23 +194,25 @@ class TeamMembers(APIView):
 
     def get(self, request, teamid, format=None):
         teamQuerySet = Team.objects.values('id', 'members', 'managers', 'owners')
-        members = {}
+        memberDict = {
+            'members': [],
+            'managers': [],
+            'owners': []
+        }
+        seen = set()
         for team in teamQuerySet:
-            if team['id']==int(teamid):
+            if team['id'] == int(teamid):
                 for level in ['members', 'managers', 'owners']:
-                    if not team[level] is None:
-                        users=[]
-                        if isinstance(team[level], list):
-                            for user in team[level]:
-                                users.append(UserSerializer(self.get_object(user)).data)
-                        else:
-                            users.append(UserSerializer(self.get_object(team[level])).data)
-                        members[level]=users
-                    else:
-                        members[level]=[]
+                    user = team[level]
+                    if user and not user in seen:
+                        userObject = UserSerializer(self.get_object(user)).data
+                        newList = memberDict[level]
+                        newList.append(userObject)
+                        memberDict[level] = newList
+                        seen.add(user)
 
-        if members:
-            return Response(members, status=status.HTTP_200_OK)
+        if len(seen):
+            return Response(memberDict, status=status.HTTP_200_OK)
         return Response(status=status.HTTP_404_NOT_FOUND)
 
 class RelatedTeams(APIView):
