@@ -1,68 +1,36 @@
 ## Home to the opus-tm Django REST [API](https://opustm-api.herokuapp.com/)
 ## This API serves our React Web [App](https://opustm.herokuapp.com/)
 
-### Test Users: (password and username are the same, email is &lt;username&gt;@example.com)
+### Test Users: (password and username are the same, email is {username}@example.com)
 For the time-being, please do not register any more users unless testing email invitation/registration - Management
 - test
-- dvader
-- lukeskywalker
-- leiaskywalker
-
-### Test Cliques:
-- Test
-- The Dark Side
 
 # Endpoints:
-## User
-- /currentUser/
-- /addUsers/                  
-- /users/                         
-- /users/&lt;userId&gt;/
-- /userDetails/&lt;username&gt;/
-- /userEmailDetails/&lt;userEmail&gt;/
-## Clique
-- /cliques/
-- /cliques/&lt;cliqueId&gt;/
-- /cliqueDetails/&lt;cliqueName&gt;/
-- /cliqueMembers/&lt;cliqueName&gt;/
-## Invitation
-- /invitations/
-- /invitation/&lt;invitationId&gt;/
-- /invitationDetails/&lt;inviteeEmail&gt;/
-- /userInvitations/&lt;username&gt;/
-## Request
+## Users
+- /currentUser/                  
+- /users/       
+- /register/                  
+- /users/<str:userid>/
+- /users/<str:userid>/teams/
+- /users/<str:userid>/contacts/
+- /users/<str:userid>/schedule/
+## Teams
+- /teams/
+- /teams/<str:teamid>/
+- /teams/<str:teamid>/members/
+## Requests
 - /requests/
-- /requests/&lt;requestId&gt;/
-- /cliqueRequests/&lt;cliqueName&gt;/
-## Event
+- /requests/team/<str:teamid>/
+- /requests/user/<str:userid>/
+## Events
 - /events/
-- /events/&lt;cliqueEventId&gt;/
-- /cliqueEvents/&lt;cliqueName&gt;/
-## Schedule
-- /schedules/
-- /schedules/&lt;scheduleId&gt;/
-- /userSchedules/&lt;username&gt;/
-- /timeframes/
-- /timeframes/&lt;timeFrameId&gt;/
-- /scheduleTimeFrames/&lt;scheduleId&gt;/
-## Announcement
+- /events/team/<str:teamid>/
+- /events/user/<str:userid>/
+## Announcements
 - /announcements/
-- /announcements/&lt;announcementId&gt;/
-- /cliqueAnnouncements/&lt;cliqueName&gt;/
-## Message
-- /directMessages/
-- /directMessages/&lt;directMessageId&gt;/
-- /userDirectMessagesSent/&lt;username&gt;/
-- /userDirectMessagesRecieved/&lt;username&gt;/
-- /cliqueMessages/
-- /cliqueMessages/&lt;cliqueMessageId&gt;/
-- /cliqueCliqueMessages/&lt;cliqueName&gt;/
-- /reactions/
-- /reactions/&lt;reactionId&gt;/
-## To Do
-- /toDos/
-- /toDos/&lt;toDoId&gt;/
-- /userToDos/&lt;username&gt;/
+- /announcements/team/<str:teamid>/
+- /announcements/user/<str:userid>/
+
 ## Token
 - /tokenAuth/
 ## Django Admin
