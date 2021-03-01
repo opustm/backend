@@ -114,16 +114,11 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
-
+staging='postgres://jccljrzydpfygp:8d28f514694ad0f24698f04103e3888be266fbde875cd9a924e5a74c356eec15@ec2-54-158-222-248.compute-1.amazonaws.com:5432/d3ucugchgunj1h'
+production='postgres://dorwisqovqacjy:604b96b13eaf7f654eda750c48812d6f046f6e42874721a8e5163d31be490b09@ec2-52-2-82-109.compute-1.amazonaws.com:5432/daoainmikocqe6'
 DATABASES={}
 
-if 'test' in sys.argv:
-    DATABASES['default'] = {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-        }
-else:
-    DATABASES['default'] = {
+stage = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'd3ucugchgunj1h',
         'USER': 'jccljrzydpfygp',
@@ -131,7 +126,26 @@ else:
         'HOST': 'ec2-54-158-222-248.compute-1.amazonaws.com',
         'PORT': '5432',
     }
-    DATABASES['default'] = dj_database_url.parse('postgres://jccljrzydpfygp:8d28f514694ad0f24698f04103e3888be266fbde875cd9a924e5a74c356eec15@ec2-54-158-222-248.compute-1.amazonaws.com:5432/d3ucugchgunj1h', conn_max_age=600)
+
+prod= {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'daoainmikocqe6',
+        'USER': 'dorwisqovqacjy',
+        'PASSWORD': '604b96b13eaf7f654eda750c48812d6f046f6e42874721a8e5163d31be490b09',
+        'HOST': 'ec2-52-2-82-109.compute-1.amazonaws.com',
+        'PORT': '5432',
+}
+
+if 'test' in sys.argv:
+    DATABASES['default'] = {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+        }
+else:
+    DATABASES['default'] = prod
+    
+    DATABASES['default'] = dj_database_url.parse(production, conn_max_age=600)
+    
     
 
 # Password validation
