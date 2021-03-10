@@ -8,7 +8,10 @@ class TestTeamsSetUp(APITestCase):
         self.fake = Faker()
         self.teams_url = "/teams/"
         self.get_members_by_userid = reverse("get_members_by_userid")
-        self.team_data = { }
+        self.team_data = {
+            members=[]
+            managers
+         }
         return super().setUp()
     
     def tearDown(self):
