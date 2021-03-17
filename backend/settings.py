@@ -144,7 +144,7 @@ TEST_DATABASE = {
 if 'test' in sys.argv:
     DATABASES['default'] = TEST_DATABASE
 else:
-    DATABASES['default'] = PRODUCTION_DATABASE
+    DATABASES['default'] = STAGING_DATABASE
     
     DATABASES['default'] = dj_database_url.parse(production, conn_max_age=600)
     
