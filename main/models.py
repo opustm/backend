@@ -42,7 +42,8 @@ class AbstractGroup(models.Model):
         return (self.name,)
 
 class User(AbstractUser):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4(), editable=False)
+    id = models.AutoField(primary_key=True)
+    # id = models.UUIDField(primary_key=True, unique=True, default=uuid.uuid4(), editable=False)
     bio = models.CharField(max_length=160, default='hi there. please call me Steve.')
     picture = models.CharField(max_length=100, default='pic1')
     theme = models.CharField(max_length=100, default='theme1')
