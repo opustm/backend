@@ -118,7 +118,7 @@ staging='postgres://jccljrzydpfygp:8d28f514694ad0f24698f04103e3888be266fbde875cd
 production='postgres://dorwisqovqacjy:604b96b13eaf7f654eda750c48812d6f046f6e42874721a8e5163d31be490b09@ec2-52-2-82-109.compute-1.amazonaws.com:5432/daoainmikocqe6'
 DATABASES={}
 
-stage = {
+STAGING_DATABASE = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'd3ucugchgunj1h',
         'USER': 'jccljrzydpfygp',
@@ -127,7 +127,7 @@ stage = {
         'PORT': '5432',
     }
 
-prod= {
+PRODUCTION_DATABASE = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'daoainmikocqe6',
         'USER': 'dorwisqovqacjy',
@@ -136,13 +136,15 @@ prod= {
         'PORT': '5432',
 }
 
-if 'test' in sys.argv:
-    DATABASES['default'] = {
+TEST_DATABASE = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
         }
+
+if 'test' in sys.argv:
+    DATABASES['default'] = TEST_DATABASE
 else:
-    DATABASES['default'] = prod
+    DATABASES['default'] = PRODUCTION_DATABASE
     
     DATABASES['default'] = dj_database_url.parse(production, conn_max_age=600)
     
