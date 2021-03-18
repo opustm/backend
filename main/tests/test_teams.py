@@ -10,16 +10,45 @@ class TestTeamsSetUp(APITestCase):
         # self.get_members_by_userid = reverse("get_members_by_userid")
         self.team_data = {
             "id":1,
-            "name":"test team",
-            "members":[],
-            "managers":[],
-            "owners":[],
-            "description":"a test team",
-            "displayName":"test",
-            "picture":"test.jpg",
-            "teamType":"SUB",
-            "workspace":"general",
-            "relatedTeams":[]
+            "members": [],
+            "managers": [],
+            "owners": [],
+            "name": "team",
+            "workspace": "Luther",
+            "teamType": "sub",
+            "picture": "team.jpg",
+            "displayName": "team",
+            "description": "team",
+            "permissions": [],
+            "relatedteams": []
+        }
+        self.team_data_invalid = {
+            "id":2,
+            "members": [],
+            "managers": [],
+            "owners": [],
+            "name": "fail",
+            "workspace": "Luther",
+            "teamType": "SUB",
+            "picture": "fail.jpg",
+            "displayName": "fail",
+            "description": "fail",
+            "permissions": [],
+            "relatedteams": []
+        }
+        self.team_data_change = {
+            "id":1,
+            "members": [],
+            "managers": [],
+            "owners": [],
+            "name": "team",
+            "workspace": "Luther",
+            "teamType": "sub",
+            "picture": "updatedteam.jpg",
+            "displayName": "team",
+            "description": "team",
+            "permissions": [],
+            "relatedteams": []
         }
         return super().setUp()
     
@@ -27,22 +56,65 @@ class TestTeamsSetUp(APITestCase):
         return super().tearDown()
 
 class TestTeamsViews(TestTeamsSetUp):
+    def test_team_get(self):
+        res=self.client.get(self.teams_url)
+        self.assertEqual(res.status_code, 200)
 
     def test_team_post(self):
         response=self.client.post(self.teams_url, self.team_data, format="json")
         self.assertEqual(response.status_code, 201)
         self.assertEqual(response.data, self.team_data)
+        
+        response2=self.client.post(self.teams_url, self.team_data_invalid, format="json")
+        self.assertEqual(response2.status_code, 400)
 
-    def test_get_all_teams(self):
-        res=self.client.get(self.teams_url)
-        self.assertEqual(res.status_code, 200)
+    def test_team_put(self):
+        response=self.client.put(self.teams_url, self.team_data, format="json")
+        self.assertEqual(response.status_code, 405)
 
-    # def test_get_team_by_teamid(self):
-    #     response=self.client.get(f"{self.teams_url}/1")
-    #     self.assertEqual(res.status_code, status.HTTP_200_OK)
-    #     self.assertEqual(response.data, {'members':[], 'managers':[], 'owners':[]})
+    def test_team_delete(self):
+        response=self.client.put(self.teams_url, self.team_data, format="json")
+        self.assertEqual(response.status_code, 405)
 
-    # def test_get_members_by_userid(self):
-    #     response=self.client.get(self.teams_url)
-    #     self.assertEqual(res.status_code, status.HTTP_200_OK)
-    #     self.assertEqual(response.data, {'members':[], 'managers':[], 'owners':[]})
+    #/teams/{team_id}
+    # def test_team_get(self):
+    #     res=self.client.get(self.teams_url)
+    #     self.assertEqual(res.status_code, 200)
+        
+    # def test_team_post(self):
+    #     response=self.client.post(self.teams_url, self.team_data, format="json")
+    #     self.assertEqual(response.status_code, 201)
+    #     self.assertEqual(response.data, self.team_data)
+        
+    #     response2=self.client.post(self.teams_url, self.team_data_invalid, format="json")
+    #     self.assertEqual(response2.status_code, 400)
+
+    # def test_team_put(self):
+    #     response=self.client.put(self.teams_url, self.team_data, format="json")
+    #     self.assertEqual(response.status_code, 405)
+
+    # def test_team_delete(self):
+    #     response=self.client.put(self.teams_url, self.team_data, format="json")
+    #     self.assertEqual(response.status_code, 405)
+
+    # #/teams/{team_id}/members
+    # def test_team_get(self):
+    #     res=self.client.get(self.teams_url)
+    #     self.assertEqual(res.status_code, 200)
+        
+    # def test_team_post(self):
+    #     response=self.client.post(self.teams_url, self.team_data, format="json")
+    #     self.assertEqual(response.status_code, 201)
+    #     self.assertEqual(response.data, self.team_data)
+        
+    #     response2=self.client.post(self.teams_url, self.team_data_invalid, format="json")
+    #     self.assertEqual(response2.status_code, 400)
+
+    # def test_team_put(self):
+    #     response=self.client.put(self.teams_url, self.team_data, format="json")
+    #     self.assertEqual(response.status_code, 405)
+
+    # def test_team_delete(self):
+    #     response=self.client.put(self.teams_url, self.team_data, format="json")
+    #     self.assertEqual(response.status_code, 405)
+
