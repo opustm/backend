@@ -1,7 +1,8 @@
 from django.http import HttpResponseRedirect, HttpResponse
 
+
 def documentation(request):
-    html = '''
+    html = """
     
     <html>
         <head>
@@ -51,5 +52,5 @@ def documentation(request):
             </ul>
         </body>
     </html>
-    '''
+    """
     return HttpResponse(html)
