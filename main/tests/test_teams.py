@@ -82,10 +82,14 @@ class TestTeamsViews(TestTeamsSetUp):
         self.assertEqual(response.status_code, 405)
 
     # /teams/{team_id}
-    # def test_team_get(self):
-    #     res=self.client.get(self.teams_url)
-    #     self.assertEqual(res.status_code, 200)
+    # def test_specific_team_get(self):
+    #     response=self.client.post(self.teams_url, self.team_data, format="json")
+    #     self.assertEqual(response.status_code, 201)
 
+    #     res=self.client.get("/teams/1/")
+    #     self.assertEqual(res.status_code, 200)
+        # print(res.data)
+        
     # def test_team_post(self):
     #     response=self.client.post(self.teams_url, self.team_data, format="json")
     #     self.assertEqual(response.status_code, 201)
