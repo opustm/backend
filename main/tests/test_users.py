@@ -45,7 +45,6 @@ class TestUsers(TestUserSetUp):
     def post(self):
         self.client.post(self.register_url, self.user_data, format="json")
 
-
     #/users/
     def test_users_get(self):
         self.post()
@@ -144,7 +143,7 @@ class TestUsers(TestUserSetUp):
         response=self.client.put(self.get_contacts_by_userid(1), self.user_data, format="json")
         self.assertEqual(response.status_code, 405)
 
-    # #/users/{username}/schedule
+    #/users/{username}/schedule
     def test_user_schedule_by_id_get(self):
         self.post()
         res=self.client.get(self.get_schedule_by_userid(1))
