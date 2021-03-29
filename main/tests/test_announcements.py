@@ -12,6 +12,32 @@ class TestAnnouncementsSetUp(APITestCase):
         self.announcements_by_id = lambda x: f"/announcements/{x}/"
         self.announcements_by_team_id = lambda x: f"/announcements/team/{x}/"
         self.announcements_by_user_id = lambda x: f"/announcements/user/{x}/"
+        self.user_data = {
+            "id": 1,
+            "username": "test",
+            "first_name": "tes",
+            "last_name": "t",
+            "email": "test@example.com",
+            "bio": "asdf",
+            "picture": "asdf",
+            "theme": "asdf",
+            "phone": "asdf",
+            "password": "asdf",
+        }
+        self.team_data = {
+            "id": 1,
+            "members": [],
+            "managers": [],
+            "owners": [],
+            "name": "team",
+            "workspace": "Luther",
+            "teamType": "sub",
+            "picture": "team.jpg",
+            "displayName": "team",
+            "description": "team",
+            "permissions": [],
+            "relatedteams": [],
+        }
         self.announcement_data = {
             "team": 1,
             "creator": 1,
