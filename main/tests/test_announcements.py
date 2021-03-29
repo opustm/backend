@@ -9,6 +9,9 @@ class TestAnnouncementsSetUp(APITestCase):
     def setUp(self):
         self.fake = Faker()
         self.announcements_url = "/announcements/"
+        self.announcements_by_id = lambda x: f"/announcements/{x}/"
+        self.announcements_by_team_id = lambda x: f"/announcements/team/{x}/"
+        self.announcements_by_user_id = lambda x: f"/announcements/user/{x}/"
         self.announcement_data = {
             "team": 1,
             "creator": 1,
@@ -34,11 +37,14 @@ class TestAnnouncementsSetUp(APITestCase):
 
 
 class TestAnnouncementsViews(TestAnnouncementsSetUp):
+    def post(self):#to post correctly we need to provide a valid user/team id. 
+        self.client.post(self.announcements_url, self.announcement_data, format="json")
+
     def test_announcement_get(self):
         res = self.client.get(self.announcements_url)
         self.assertEqual(res.status_code, 200)
 
-    def test_announcement_post(self):
+    def test_announcement_post(self):#to post correctly we need to provide a valid user/team id. 
         response = self.client.post(
             self.announcements_url, self.announcement_data, format="json"
         )

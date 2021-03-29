@@ -12,9 +12,10 @@ class TestUserSetUp(APITestCase):
         self.fake = Faker()
         self.users_url = "/users/"
         self.register_url = "/register/"
+        self.user_by_userid = lambda x: f"/users/{x}/"
         self.get_teams_by_userid = lambda x: f"/users/{x}/teams/"
-        self.get_contacts_by_userid = "get_contacts_by_userid"
-        self.get_schedule_by_userid = "get_schedule_by_userid"
+        self.get_contacts_by_userid = lambda x: f"/users/{x}/contacts/"
+        self.get_schedule_by_userid = lambda x: f"/users/{x}/schedule/"
         self.user_data = {
             "username": "test",
             "first_name": "tes",
@@ -38,9 +39,15 @@ class TestUserSetUp(APITestCase):
         return super().tearDown()
 
 
-class TestUsersViews(TestUserSetUp):
+
+
+class TestUsers(TestUserSetUp):
+    def post(self):
+        self.client.post(self.register_url, self.user_data, format="json")
+
     #/users/
     def test_users_get(self):
+        self.post()
         res=self.client.get(self.users_url)
         self.assertEqual(res.status_code, 200)
 
@@ -56,12 +63,12 @@ class TestUsersViews(TestUserSetUp):
         response=self.client.put(self.users_url, self.user_data, format="json")
         self.assertEqual(response.status_code, 405)
 
-    # /register/
-    def test_register_get(self):
+    #/register/
+    def test_users_register_get(self):
         res = self.client.get(self.register_url)
         self.assertEqual(res.status_code, 405)
 
-    def test_register_post(self):
+    def test_users_register_post(self):
         res = self.client.post(self.register_url, self.user_data, format="json")
         self.assertEqual(res.status_code, 201)
         self.assertEqual(res.data["username"], self.user_data["username"])
@@ -72,107 +79,84 @@ class TestUsersViews(TestUserSetUp):
         res = self.client.post(self.register_url, self.user_data_invalid, format="json")
         self.assertEqual(res.status_code, 400)
 
-    def test_register_put(self):
+    def test_users_register_put(self):
         response = self.client.put(self.register_url, self.user_data, format="json")
         self.assertEqual(response.status_code, 405)
 
-    def test_register_delete(self):
-        response = self.client.put(self.register_url, self.user_data, format="json")
+    def test_users_register_delete(self):
+        response = self.client.delete(self.register_url, self.user_data, format="json")
         self.assertEqual(response.status_code, 405)
 
-class TestUserViews(TestUserSetUp):
-    #/users/
-    def test_user_get(self):
-        
-        res=self.client.post(self.register_url, self.user_data, format="json")
-        self.assertEqual(res.status_code, 201)
+    #/users/{userid}/
+    def test_user_by_id_get(self):
+        self.post()
+        res=self.client.get(self.user_by_userid(1))
+        self.assertEqual(res.status_code, 200)
 
+    def test_user_by_id_post(self):
+        res=self.client.post(self.user_by_userid(1), self.user_data, format="json")
+        self.assertEqual(res.status_code, 405)
+
+    def test_user_by_id_put(self):
+        self.post()
+        res=self.client.put(self.user_by_userid(1), self.user_data, format="json")
+        self.assertEqual(res.status_code, 200)
+
+    def test_user_by_id_delete(self):
+        self.post()
+        res=self.client.delete(self.user_by_userid(1))
+        self.assertEqual(res.status_code, 204)
+
+    #/users/{username}/teams/
+    def test_user_teams_by_id_get(self):
+        self.post()
         res=self.client.get(self.get_teams_by_userid(1))
         self.assertEqual(res.status_code, 200)
 
+    def test_user_teams_by_id_post(self):
+        res=self.client.post(self.get_teams_by_userid(1), self.user_data, format="json")
+        self.assertEqual(res.status_code, 405)
 
+    def test_user_teams_by_id_put(self):
+        response=self.client.put(self.get_teams_by_userid(1), self.user_data, format="json")
+        self.assertEqual(response.status_code, 405)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    #/users/{username}
-    # def test_user_get(self):
-    #     res=self.client.get(self.users_url)
-    #     self.assertEqual(res.status_code, 200)
-
-    # def test_user_post(self):
-    #     res=self.client.post(self.users_url, self.user_data, format="json")
-    #     self.assertEqual(res.status_code, 201)
-
-    # def test_user_put(self):
-    #     response=self.client.put(self.users_url, self.user_data, format="json")
-    #     self.assertEqual(response.status_code, 405)
-
-    # def test_user_delete(self):
-    #     response=self.client.put(self.users_url, self.user_data, format="json")
-    #     self.assertEqual(response.status_code, 405)
-
-    # #/users/{username}/teams
-    # def test_user_get(self):
-    #     res=self.client.get(self.users_url)
-    #     self.assertEqual(res.status_code, 200)
-
-    # def test_user_post(self):
-    #     res=self.client.post(self.users_url, self.user_data, format="json")
-    #     self.assertEqual(res.status_code, 201)
-
-    # def test_user_put(self):
-    #     response=self.client.put(self.users_url, self.user_data, format="json")
-    #     self.assertEqual(response.status_code, 405)
-
-    # def test_user_delete(self):
-    #     response=self.client.put(self.users_url, self.user_data, format="json")
-    #     self.assertEqual(response.status_code, 405)
+    def test_user_teams_by_id_delete(self):
+        response=self.client.put(self.get_teams_by_userid(1), self.user_data, format="json")
+        self.assertEqual(response.status_code, 405)
 
     # #/users/{username}/contacts
-    # def test_user_get(self):
-    #     res=self.client.get(self.users_url)
-    #     self.assertEqual(res.status_code, 200)
+    def test_user_contcts_by_id_get(self):
+        self.post()
+        res=self.client.get(self.get_contacts_by_userid(1))
+        self.assertEqual(res.status_code, 200)
 
-    # def test_user_post(self):
-    #     res=self.client.post(self.users_url, self.user_data, format="json")
-    #     self.assertEqual(res.status_code, 201)
+    def test_user_contacts_by_id_post(self):
+        res=self.client.post(self.get_contacts_by_userid(1), self.user_data, format="json")
+        self.assertEqual(res.status_code, 405)
 
-    # def test_user_put(self):
-    #     response=self.client.put(self.users_url, self.user_data, format="json")
-    #     self.assertEqual(response.status_code, 405)
+    def test_user_contacts_by_id_put(self):
+        response=self.client.put(self.get_contacts_by_userid(1), self.user_data, format="json")
+        self.assertEqual(response.status_code, 405)
 
-    # def test_user_delete(self):
-    #     response=self.client.put(self.users_url, self.user_data, format="json")
-    #     self.assertEqual(response.status_code, 405)
+    def test_user_contacts_by_id_delete(self):
+        response=self.client.put(self.get_contacts_by_userid(1), self.user_data, format="json")
+        self.assertEqual(response.status_code, 405)
 
-    # #/users/{username}/schedule
-    # def test_user_get(self):
-    #     res=self.client.get(self.users_url)
-    #     self.assertEqual(res.status_code, 200)
+    #/users/{username}/schedule
+    def test_user_schedule_by_id_get(self):
+        self.post()
+        res=self.client.get(self.get_schedule_by_userid(1))
+        self.assertEqual(res.status_code, 401)
 
-    # def test_user_post(self):
-    #     res=self.client.post(self.users_url, self.user_data, format="json")
-    #     self.assertEqual(res.status_code, 201)
+    def test_user_schedule_by_id_post(self):
+        res=self.client.post(self.get_schedule_by_userid(1), self.user_data, format="json")
+        self.assertEqual(res.status_code, 401)
 
-    # def test_user_put(self):
-    #     response=self.client.put(self.users_url, self.user_data, format="json")
-    #     self.assertEqual(response.status_code, 405)
+    def test_user_schedule_by_id_put(self):
+        response=self.client.put(self.get_schedule_by_userid(1), self.user_data, format="json")
+        self.assertEqual(response.status_code, 401)
 
-    # def test_user_delete(self):
-    #     response=self.client.put(self.users_url, self.user_data, format="json")
-    #     self.assertEqual(response.status_code, 405)
+    def test_user_schedule_by_id_delete(self):
+        response=self.client.put(self.get_schedule_by_userid(1), self.user_data, format="json")
+        self.assertEqual(response.status_code, 401)
