@@ -14,7 +14,6 @@ class AbstractGroup(models.Model):
         verbose_name=_("permissions"),
         blank=True,
     )
-
     objects = GroupManager()
 
     class Meta:
@@ -187,22 +186,3 @@ class Invitation(
 
     def __str__(self):
         return f"{self.inviteeEmail} invited to {self.team} by {self.inviter}"
-
-
-# class Reaction(models.Model):
-#     reactor = models.ForeignKey(User, on_delete=models.CASCADE, related_name='userReactor')
-#     reaction = models.CharField(max_length=100, choices=[("thumbs up", "THUMBS UP"),("dislike","DISLIKE")],  default=("dislike", "DISLIKE"))
-
-# class DirectMessage(models.Model):
-#     sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='userSenderDM')
-#     recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='userRecipientDM')
-#     message = models.CharField(max_length=500, default='message text')
-#     sentAt = models.DateTimeField()
-#     reaction = models.ManyToManyField(Reaction, related_name='directMessageReaction')
-
-# class TeamMessage(models.Model):
-#     sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='userSenderCM')
-#     recipient = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='teamRecipientCM')
-#     message = models.CharField(max_length=500, default='message text')
-#     sentAt = models.DateTimeField()
-#     reaction = models.ManyToManyField(Reaction, related_name='teamMessageReaction')

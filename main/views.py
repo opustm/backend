@@ -656,6 +656,11 @@ class UserAnnouncements(APIView):
 #         return Response(status=status.HTTP_404_NOT_FOUND)
 
 
+def index(request):
+    permission_classes = (permissions.AllowAny,)
+    return HttpResponse("Welcome to the OPUS-TM API")
+
+
 @api_view(["GET"])
 def current_user(request):
     permission_classes = (permissions.AllowAny,)
