@@ -9,13 +9,9 @@ jobs:
   set-db:
     runs-on: ubuntu-latest
     steps:
-      - name: Run a one line script
-        run: echo Lets change this db variable!
+      - name: run coverage script
+        run: coverage report -i > coverage_report.txt
         
-      - name: Run a multi line script
-        run: |
-        echo Lets change this db variable!
-        echo And again!
-        env:
-          PRODUCTION: True
+      - name: run tests
+        run: python3 manage.py test > test_report.txt
           
