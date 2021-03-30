@@ -1,0 +1,21 @@
+
+name: Deploy Main
+
+on:
+  push:
+    branches: [ main ]
+    
+jobs:
+  set-db:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run a one line script
+        run: echo Lets change this db variable!
+        
+      - name: Run a multi line script
+        run: |
+        echo Lets change this db variable!
+        echo And again!
+        env:
+          PRODUCTION: True
+          
