@@ -47,9 +47,9 @@ urlpatterns = [
         name="get_team_requests_by_teamid",
     ),
     path(
-        "requests/user/<str:username>/",
+        "requests/user/<str:userid>/",
         UserRequests.as_view(),
-        name="get_user_requests_by_username",
+        name="get_user_requests_by_userid",
     ),
     # path('userInvitations/<str:username>/', UserInvitations.as_view()),
     # path('teamInvitations/<str:name>/', InvitationDetails.as_view()),

@@ -29,8 +29,6 @@ class AbstractGroup(models.Model):
 
 
 class User(AbstractUser):
-    # id = models.BigAutoField(primary_key=True)
-    # id = models.UUIDField(primary_key=True, unique=True, default=uuid.uuid4(), editable=False)
     bio = models.CharField(max_length=160, default="hi there. please call me Steve.")
     picture = models.CharField(max_length=100, default="pic1")
     theme = models.CharField(max_length=100, default="theme1")
@@ -77,24 +75,15 @@ class Team(AbstractGroup):
 
 
 class Request(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="userRequest")
-    team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="teamRequest")
+    user = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE, related_name="userRequest")
+    team = models.ForeignKey(Team, blank=True, null=True, on_delete=models.CASCADE, related_name="teamRequest")
     message = models.CharField(max_length=100, default="Please let me join our group.")
-    dateRequested = models.DateTimeField()
+    dateRequested = models.DateTimeField(default="2021-03-29T13:53:50Z")
 
 
 class Event(models.Model):
-    team = models.ForeignKey(
-        Team, on_delete=models.CASCADE, related_name="teamEvent", blank=True, null=True
-    )  # ONE TEAM CAN HAVE MANY EVENTS (ONE2M)
-    user = models.ForeignKey(
-        User,
-        default=1,
-        on_delete=models.CASCADE,
-        related_name="userEvent",
-        blank=True,
-        null=True,
-    )  # ONE USER CAN HAVE MANY EVENTS (ONE2M)
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="teamEvent", blank=True, null=True) 
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="userEvent", blank=True, null=True,) 
     name = models.CharField(max_length=100, default="event")
     start = models.DateTimeField()
     end = models.DateTimeField()

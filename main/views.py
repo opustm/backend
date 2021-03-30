@@ -316,33 +316,24 @@ class UserEvents(APIView):
     def get(self, request, userid, format=None):
         teamQuerySet = Team.objects.values("members", "managers", "owners", "id")
         teams = []
-
         for team in teamQuerySet:
             memberString = str(team["members"])
             managerString = str(team["managers"])
             ownerString = str(team["owners"])
-            if (
-                userid == memberString
-                or userid == managerString
-                or userid == ownerString
-            ):
+            if (userid == memberString or userid == managerString or userid == ownerString):
                 teams.append(team["id"])
 
-        if teams:
-            eventQuerySet = Event.objects.values("id", "user", "team")
-            events = []
-            for event in eventQuerySet:
-                if event["user"]:
-                    if event["user"].hex == userid.replace("-", ""):
-                        events.append(
-                            EventSerializer(self.get_object(event["id"])).data
-                        )
+        eventQuerySet = Event.objects.values("id", "user", "team")
+        events = []
+        for event in eventQuerySet:
+            if event["user"]:
+                if event["user"] == int(userid):
+                    events.append(EventSerializer(self.get_object(event["id"])).data)
+            if teams:
                 if event["team"]:
                     if event["team"] in teams:
-                        events.append(
-                            EventSerializer(self.get_object(event["id"])).data
-                        )
-
+                        events.append(EventSerializer(self.get_object(event["id"])).data)
+        if events:
             return Response(events, status=status.HTTP_200_OK)
         return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -366,7 +357,7 @@ class UserInvitations(APIView):
             invitationQuerySet = Invitation.objects.values("id", "invitee")
             invitations = []
             for invitation in invitationQuerySet:
-                if invitation["invitee"].hex == userid.replace("-", ""):
+                if invitation["invitee"] == int(userid):
                     invitations.append(
                         InvitationSerializer(self.get_object(invitation["id"])).data
                     )
@@ -402,20 +393,13 @@ class UserRequests(APIView):
         except Request.DoesNotExist:
             return False
 
-    def get(self, request, username, format=None):
-        userQuerySet = User.objects.values("id", "username")
-        userid = None
-        for user in userQuerySet:
-            if user["name"] == username:
-                userid = user["id"]
-        if userid:
-            requestQuerySet = Request.objects.values("id", "user")
-            requests = []
-            for request in requestQuerySet:
-                if request["user"].hex == userid.replace("-", ""):
-                    requests.append(
-                        RequestSerializer(self.get_object(request["id"])).data
-                    )
+    def get(self, request, userid, format=None):
+        requestQuerySet = Request.objects.values("id", "user")
+        requests = []
+        for request in requestQuerySet:
+            if request["user"] == int(userid):
+                requests.append(RequestSerializer(self.get_object(request["id"])).data)
+        if requests:
             return Response(requests, status=status.HTTP_200_OK)
         return Response(status=status.HTTP_404_NOT_FOUND)
 

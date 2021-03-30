@@ -38,7 +38,7 @@ class TestRequestsSetUp(APITestCase):
             "relatedteams": [],
         }
         self.event_data = {
-            "id":1,
+            "id": 1,
             "user": 1,
             "team": 1,
             "name": "event",
@@ -46,10 +46,9 @@ class TestRequestsSetUp(APITestCase):
             "end": "2021-03-29T13:25:36Z",
             "details": "asdf",
             "picture": "asdf",
-            "invited": [],
+            "invited": []
         }
         self.request_data = {
-            "id": 1,
             "user": 1,
             "team": 1,
             "message": "put me in coach",
@@ -58,7 +57,7 @@ class TestRequestsSetUp(APITestCase):
         self.request_data_invalid = {"message": "hello", "dateRequested": "1234"}
         return super().setUp()
 
-    def tearDown(self):
+    def tearDown(self): 
         return super().tearDown()
 
 
@@ -76,16 +75,21 @@ class TestRequestsViews(TestRequestsSetUp):
         self.assertEqual(res.status_code, 200)
 
     def test_request_post(self):
-        self.post()
+        self.client.post("/teams/", self.team_data, format="json")
+        self.client.post("/users/", self.user_data, format="json")
+        self.client.post("/events/", self.event_data, format="json")
         response = self.client.post(self.requests_url, self.request_data, format="json")
         self.assertEqual(response.status_code, 201)
+
+        invalid_response = self.client.post(self.requests_url, self.request_data_invalid, format="json")
+        self.assertEqual(invalid_response.status_code, 400)
 
     def test_request_put(self):
         response = self.client.put(self.requests_url, self.request_data, format="json")
         self.assertEqual(response.status_code, 405)
 
     def test_request_delete(self):
-        response = self.client.put(self.requests_url, self.request_data, format="json")
+        response = self.client.delete(self.requests_url)
         self.assertEqual(response.status_code, 405)
 
     # requests by id
@@ -101,12 +105,12 @@ class TestRequestsViews(TestRequestsSetUp):
     def test_request_by_id_put(self):
         self.post()
         response = self.client.put(self.requests_by_id(1), self.request_data, format="json")
-        self.assertEqual(response.status_code, 204)
+        self.assertEqual(response.status_code, 200)
 
     def test_request_by_id_delete(self):
         self.post()
         response = self.client.put(self.requests_by_id(1), self.request_data, format="json")
-        self.assertEqual(response.status_code, 205)    
+        self.assertEqual(response.status_code, 200)    
     
     # requests by team id
     def test_request_by_team_id_get(self):

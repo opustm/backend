@@ -136,8 +136,8 @@ class TimeFrameSerializer(serializers.ModelSerializer):
 
 
 class RequestSerializer(serializers.ModelSerializer):
-    user = serializers.SerializerMethodField()
-    team = serializers.SerializerMethodField()
+    user = UserField(queryset=User.objects.all(), allow_null=True)
+    team = TeamField(queryset=Team.objects.all(), allow_null=True)
 
     class Meta:
         model = Request
@@ -150,6 +150,7 @@ class RequestSerializer(serializers.ModelSerializer):
     def get_team(self, obj):
         data = TeamSerializer(obj.team).data
         return data
+
 
 
 class UserSerializerWithToken(serializers.ModelSerializer):

@@ -14,6 +14,7 @@ class TestEventsSetUp(APITestCase):
         self.events_by_user_id = lambda x: f"/events/user/{x}/"
 
         self.user_data = {
+            "id":1,
             "username": "test",
             "first_name": "tes",
             "last_name": "t",
