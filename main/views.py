@@ -333,7 +333,7 @@ class UserEvents(APIView):
             events = []
             for event in eventQuerySet:
                 if event["user"]:
-                    if event["user"].hex == userid.replace("-", ""):
+                    if event["user"] == userid:
                         events.append(
                             EventSerializer(self.get_object(event["id"])).data
                         )
