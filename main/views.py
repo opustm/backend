@@ -357,7 +357,7 @@ class UserInvitations(APIView):
             invitationQuerySet = Invitation.objects.values("id", "invitee")
             invitations = []
             for invitation in invitationQuerySet:
-                if invitation["invitee"].hex == userid.replace("-", ""):
+                if invitation["invitee"] == int(userid):
                     invitations.append(
                         InvitationSerializer(self.get_object(invitation["id"])).data
                     )
@@ -393,20 +393,13 @@ class UserRequests(APIView):
         except Request.DoesNotExist:
             return False
 
-    def get(self, request, username, format=None):
-        userQuerySet = User.objects.values("id", "username")
-        userid = None
-        for user in userQuerySet:
-            if user["name"] == username:
-                userid = user["id"]
-        if userid:
-            requestQuerySet = Request.objects.values("id", "user")
-            requests = []
-            for request in requestQuerySet:
-                if request["user"].hex == userid.replace("-", ""):
-                    requests.append(
-                        RequestSerializer(self.get_object(request["id"])).data
-                    )
+    def get(self, request, userid, format=None):
+        requestQuerySet = Request.objects.values("id", "user")
+        requests = []
+        for request in requestQuerySet:
+            if request["user"] == int(userid):
+                requests.append(RequestSerializer(self.get_object(request["id"])).data)
+        if requests:
             return Response(requests, status=status.HTTP_200_OK)
         return Response(status=status.HTTP_404_NOT_FOUND)
 
