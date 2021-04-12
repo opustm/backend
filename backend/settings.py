@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "corsheaders",
     "main.apps.MainConfig",
-    "rest_framework_swagger",
+    "drf_yasg",
 ]
 
 JWT_AUTH = {"JWT_RESPONSE_PAYLOAD_HANDLER": "backend.utils.my_jwt_response_handler"}
@@ -68,7 +68,6 @@ REST_FRAMEWORK = {
         "rest_framework_jwt.authentication.JSONWebTokenAuthentication",
         "rest_framework.authentication.SessionAuthentication",
         "rest_framework.authentication.BasicAuthentication",
-        # 'rest_framework.permissions.IsAuthenticated',
     ),
 }
 
