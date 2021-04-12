@@ -45,10 +45,12 @@ class AnnouncementViewset(viewsets.ModelViewSet):
     queryset = models.Announcement.objects.all()
     serializer_class = serializers.AnnouncementSerializer
 
+
 class RequestViewset(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny,)
     queryset = models.Request.objects.all()
     serializer_class = serializers.RequestSerializer
+
 
 # class DirectMessageViewset(viewsets.ModelViewSet):
 #     permission_classes = (permissions.AllowAny,)
@@ -64,5 +66,3 @@ class RequestViewset(viewsets.ModelViewSet):
 #     permission_classes = (permissions.AllowAny,)
 #     queryset= models.Reaction.objects.all()
 #     serializer_class = serializers.ReactionSerializer
-
-

@@ -152,7 +152,6 @@ class RequestSerializer(serializers.ModelSerializer):
         return data
 
 
-
 class UserSerializerWithToken(serializers.ModelSerializer):
     token = serializers.SerializerMethodField()
     password = serializers.CharField(write_only=True)

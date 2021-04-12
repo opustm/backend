@@ -63,7 +63,7 @@ class TestTeamsSetUp(APITestCase):
 class TestTeamsViews(TestTeamsSetUp):
     def post(self):
         self.client.post(self.teams_url, self.team_data, format="json")
-    
+
     def test_team_get(self):
         res = self.client.get(self.teams_url)
         self.assertEqual(res.status_code, 200)
@@ -89,37 +89,41 @@ class TestTeamsViews(TestTeamsSetUp):
     # /teams/{team_id}
     def test_team_by_id_get(self):
         self.post()
-        res=self.client.get(self.team_by_id(1))
+        res = self.client.get(self.team_by_id(1))
         self.assertEqual(res.status_code, 200)
-        
+
     def test_team_by_id_post(self):
-        response=self.client.post(self.team_by_id(1), self.team_data, format="json")
+        response = self.client.post(self.team_by_id(1), self.team_data, format="json")
         self.assertEqual(response.status_code, 405)
 
     def test_team_by_id_put(self):
         self.post()
-        response=self.client.put(self.team_by_id(1), self.team_data, format="json")
+        response = self.client.put(self.team_by_id(1), self.team_data, format="json")
         self.assertEqual(response.status_code, 200)
 
     def test_team_by_id_delete(self):
         self.post()
-        response=self.client.delete(self.team_by_id(1))
+        response = self.client.delete(self.team_by_id(1))
         self.assertEqual(response.status_code, 204)
 
-    #/teams/{team_id}/members
+    # /teams/{team_id}/members
     def test_team_members_by_id_get(self):
         self.post()
-        res=self.client.get(self.team_members_by_id(1))
+        res = self.client.get(self.team_members_by_id(1))
         self.assertEqual(res.status_code, 404)
 
     def test_team_members_by_id_post(self):
-        response=self.client.post(self.team_members_by_id(1), self.team_data, format="json")
+        response = self.client.post(
+            self.team_members_by_id(1), self.team_data, format="json"
+        )
         self.assertEqual(response.status_code, 405)
 
     def test_team_team_members_by_id_put(self):
-        response=self.client.put(self.team_members_by_id(1), self.team_data, format="json")
+        response = self.client.put(
+            self.team_members_by_id(1), self.team_data, format="json"
+        )
         self.assertEqual(response.status_code, 405)
 
     def test_team_members_by_id_delete(self):
-        response=self.client.delete(self.team_members_by_id(1))
+        response = self.client.delete(self.team_members_by_id(1))
         self.assertEqual(response.status_code, 405)

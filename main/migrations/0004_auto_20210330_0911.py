@@ -8,23 +8,37 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('main', '0003_auto_20210330_0903'),
+        ("main", "0003_auto_20210330_0903"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='request',
-            name='dateRequested',
-            field=models.DateTimeField(default='2021-03-29T13:53:50Z'),
+            model_name="request",
+            name="dateRequested",
+            field=models.DateTimeField(default="2021-03-29T13:53:50Z"),
         ),
         migrations.AlterField(
-            model_name='request',
-            name='team',
-            field=models.ForeignKey(blank=True, default=1, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='teamRequest', to='main.team'),
+            model_name="request",
+            name="team",
+            field=models.ForeignKey(
+                blank=True,
+                default=1,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="teamRequest",
+                to="main.team",
+            ),
         ),
         migrations.AlterField(
-            model_name='request',
-            name='user',
-            field=models.ForeignKey(blank=True, default=1, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='userRequest', to=settings.AUTH_USER_MODEL),
+            model_name="request",
+            name="user",
+            field=models.ForeignKey(
+                blank=True,
+                default=1,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="userRequest",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
     ]
