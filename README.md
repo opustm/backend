@@ -1,6 +1,6 @@
 # Opus Team API
 
-![Website Status](https://img.shields.io/website?url=https%3A%2F%2Fapi.opusteam.us) [![GitHub license](https://img.shields.io/github/license/Naereen/StrapDown.js.svg)](https://github.com/opusteam/frontend/blob/master/LICENSE) [![Generic badge](https://img.shields.io/badge/Python-v3.9-blue.svg)](https://shields.io/)
+![Website Status](https://img.shields.io/website?url=https%3A%2F%2Fapi.opusteam.us) [![GitHub license](https://img.shields.io/github/license/Naereen/StrapDown.js.svg)](https://docs.opusteam.us/legal/LICENSE.md) [![Generic badge](https://img.shields.io/badge/Python-v3.9-blue.svg)](https://docs.opusteam.us/)
 
 ## About
 
