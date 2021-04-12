@@ -6,7 +6,7 @@
 
 This is the Opus REST API which serves the Opus Frontend. It currently contains documentation and endpoints for users, teams, requests, events, announcements, JWT, Django Admin.
 
-Available at [https://opusteam.us](https://opusteam.us).
+Available at [https://api.opusteam.us](https://api.opusteam.us).
 
 
 ## Dependencies
