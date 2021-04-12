@@ -8,18 +8,30 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('main', '0004_auto_20210330_0911'),
+        ("main", "0004_auto_20210330_0911"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='request',
-            name='team',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='teamRequest', to='main.team'),
+            model_name="request",
+            name="team",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="teamRequest",
+                to="main.team",
+            ),
         ),
         migrations.AlterField(
-            model_name='request',
-            name='user',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='userRequest', to=settings.AUTH_USER_MODEL),
+            model_name="request",
+            name="user",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="userRequest",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
     ]

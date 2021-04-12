@@ -14,7 +14,7 @@ class TestEventsSetUp(APITestCase):
         self.events_by_user_id = lambda x: f"/events/user/{x}/"
 
         self.user_data = {
-            "id":1,
+            "id": 1,
             "username": "test",
             "first_name": "tes",
             "last_name": "t",
@@ -40,7 +40,7 @@ class TestEventsSetUp(APITestCase):
             "relatedteams": [],
         }
         self.event_data = {
-            "id":1,
+            "id": 1,
             "user": 1,
             "team": 1,
             "name": "event",
@@ -98,7 +98,7 @@ class TestEventsViews(TestEventsSetUp):
         response = self.client.delete(self.events_url, self.event_data, format="json")
         self.assertEqual(response.status_code, 405)
 
-    #event_by_id
+    # event_by_id
     def test_event_by_id_get(self):
         self.post()
         res = self.client.get(self.event_by_id(1))
@@ -119,36 +119,44 @@ class TestEventsViews(TestEventsSetUp):
         response = self.client.delete(self.event_by_id(1))
         self.assertEqual(response.status_code, 204)
 
-    #events_by_team_id
+    # events_by_team_id
     def test_events_by_team_id_get(self):
         self.post()
         res = self.client.get(self.events_by_team_id(1))
         self.assertEqual(res.status_code, 200)
 
     def test_events_by_team_id_post(self):
-        response = self.client.post(self.events_by_team_id(1), self.event_data, format="json")
+        response = self.client.post(
+            self.events_by_team_id(1), self.event_data, format="json"
+        )
         self.assertEqual(response.status_code, 405)
 
     def test_events_by_team_id_put(self):
-        response = self.client.put(self.events_by_team_id(1), self.event_data, format="json")
+        response = self.client.put(
+            self.events_by_team_id(1), self.event_data, format="json"
+        )
         self.assertEqual(response.status_code, 405)
 
     def test_events_by_team_id_delete(self):
         response = self.client.delete(self.events_by_team_id(1))
         self.assertEqual(response.status_code, 405)
 
-    #events_by_user_id
+    # events_by_user_id
     def test_events_by_user_id_get(self):
         self.post()
         res = self.client.get(self.events_by_user_id(1))
         self.assertEqual(res.status_code, 200)
 
     def test_events_by_user_id_post(self):
-        response = self.client.post(self.events_by_user_id(1), self.event_data, format="json")
+        response = self.client.post(
+            self.events_by_user_id(1), self.event_data, format="json"
+        )
         self.assertEqual(response.status_code, 405)
 
     def test_events_by_user_id_put(self):
-        response = self.client.put(self.events_by_user_id(1), self.event_data, format="json")
+        response = self.client.put(
+            self.events_by_user_id(1), self.event_data, format="json"
+        )
         self.assertEqual(response.status_code, 405)
 
     def test_events_by_user_id_delete(self):

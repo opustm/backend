@@ -39,7 +39,7 @@ class TestAnnouncementsSetUp(APITestCase):
             "relatedteams": [],
         }
         self.event_data = {
-            "id":1,
+            "id": 1,
             "user": 1,
             "team": 1,
             "name": "event",
@@ -50,7 +50,7 @@ class TestAnnouncementsSetUp(APITestCase):
             "invited": [],
         }
         self.announcement_data = {
-            "id":1,
+            "id": 1,
             "team": 1,
             "creator": 1,
             "priority": 1,
@@ -75,7 +75,7 @@ class TestAnnouncementsSetUp(APITestCase):
 
 
 class TestAnnouncementsViews(TestAnnouncementsSetUp):
-    def post(self):#to post correctly we need to provide a valid user/team id. 
+    def post(self):  # to post correctly we need to provide a valid user/team id.
         self.client.post("/users/", self.user_data, format="json")
         self.client.post("/teams/", self.team_data, format="json")
         self.client.post("/events/", self.event_data, format="json")
@@ -85,9 +85,13 @@ class TestAnnouncementsViews(TestAnnouncementsSetUp):
         res = self.client.get(self.announcements_url)
         self.assertEqual(res.status_code, 200)
 
-    def test_announcement_post(self):#to post correctly we need to provide a valid user/team id. 
+    def test_announcement_post(
+        self,
+    ):  # to post correctly we need to provide a valid user/team id.
         self.post()
-        response = self.client.post(self.announcements_url, self.announcement_data, format="json")
+        response = self.client.post(
+            self.announcements_url, self.announcement_data, format="json"
+        )
         self.assertEqual(response.status_code, 201)
         self.assertEqual(self.announcement_data, self.announcement_data)
 
@@ -97,7 +101,9 @@ class TestAnnouncementsViews(TestAnnouncementsSetUp):
         self.assertEqual(response2.status_code, 400)
 
     def test_announcement_put(self):
-        response = self.client.put(self.announcements_url, self.announcement_data, format="json")
+        response = self.client.put(
+            self.announcements_url, self.announcement_data, format="json"
+        )
         self.assertEqual(response.status_code, 405)
 
     def test_announcement_delete(self):
@@ -111,12 +117,16 @@ class TestAnnouncementsViews(TestAnnouncementsSetUp):
         self.assertEqual(res.status_code, 200)
 
     def test_announcement_by_id_post(self):
-        response = self.client.post(self.announcements_by_id(1), self.announcement_data, format="json")
+        response = self.client.post(
+            self.announcements_by_id(1), self.announcement_data, format="json"
+        )
         self.assertEqual(response.status_code, 405)
 
     def test_announcement_by_id_put(self):
         self.post()
-        response = self.client.put(self.announcements_by_id(1), self.announcement_data, format="json")
+        response = self.client.put(
+            self.announcements_by_id(1), self.announcement_data, format="json"
+        )
         self.assertEqual(response.status_code, 200)
 
     def test_announcement_by_id_delete(self):
@@ -130,11 +140,15 @@ class TestAnnouncementsViews(TestAnnouncementsSetUp):
         self.assertEqual(res.status_code, 200)
 
     def test_announcement_by_team_id_post(self):
-        response = self.client.post(self.announcements_by_team_id(1), self.announcement_data, format="json")
+        response = self.client.post(
+            self.announcements_by_team_id(1), self.announcement_data, format="json"
+        )
         self.assertEqual(response.status_code, 405)
 
     def test_announcement_by_team_id_put(self):
-        response = self.client.put(self.announcements_by_team_id(1), self.announcement_data, format="json")
+        response = self.client.put(
+            self.announcements_by_team_id(1), self.announcement_data, format="json"
+        )
         self.assertEqual(response.status_code, 405)
 
     def test_announcement_by_team_id_delete(self):
@@ -148,12 +162,14 @@ class TestAnnouncementsViews(TestAnnouncementsSetUp):
 
     def test_announcement_by_user_id_post(self):
         response = self.client.post(
-            self.announcements_by_user_id(1), self.announcement_data, format="json")
+            self.announcements_by_user_id(1), self.announcement_data, format="json"
+        )
         self.assertEqual(response.status_code, 405)
 
-
     def test_announcement_by_user_id_put(self):
-        response = self.client.put(self.announcements_by_user_id(1), self.announcement_data, format="json")
+        response = self.client.put(
+            self.announcements_by_user_id(1), self.announcement_data, format="json"
+        )
         self.assertEqual(response.status_code, 405)
 
     def test_announcement_by_user_id_delete(self):

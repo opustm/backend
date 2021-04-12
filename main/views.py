@@ -320,7 +320,11 @@ class UserEvents(APIView):
             memberString = str(team["members"])
             managerString = str(team["managers"])
             ownerString = str(team["owners"])
-            if (userid == memberString or userid == managerString or userid == ownerString):
+            if (
+                userid == memberString
+                or userid == managerString
+                or userid == ownerString
+            ):
                 teams.append(team["id"])
 
         eventQuerySet = Event.objects.values("id", "user", "team")
@@ -332,7 +336,9 @@ class UserEvents(APIView):
             if teams:
                 if event["team"]:
                     if event["team"] in teams:
-                        events.append(EventSerializer(self.get_object(event["id"])).data)
+                        events.append(
+                            EventSerializer(self.get_object(event["id"])).data
+                        )
         if events:
             return Response(events, status=status.HTTP_200_OK)
         return Response(status=status.HTTP_404_NOT_FOUND)
