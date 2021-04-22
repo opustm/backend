@@ -15,6 +15,7 @@ faker = "*"
 coverage = "*"
 django-rest-swagger = "*"
 drf-yasg = "*"
+gunicorn = "*"
 
 [dev-packages]
 
